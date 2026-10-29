@@ -297,7 +297,7 @@ export function scanUrl(rawInput: string): UrlCheckResult {
 
   const redFlags: string[] = [];
   const safetyAdvice: string[] = [];
-  let trustScore = 85;
+  let trustScore = 75; // Standard safe domain baseline
   let detectedBrand: string | undefined = undefined;
   let brandCategory: string | undefined = undefined;
   let isAuthenticBrandDomain = false;
@@ -370,20 +370,29 @@ export function scanUrl(rawInput: string): UrlCheckResult {
     trustScore -= 40;
   }
 
-  // 7. Legitimate Authenticated Domain Boost
+  // 7. Legitimate Authenticated Domain Boost: Verified official sites get 100/100
   if (isAuthenticBrandDomain && protocol === 'https' && redFlags.length === 0) {
-    trustScore = 99;
+    trustScore = 100;
   }
 
   // Clamp trust score 0-100
   trustScore = Math.max(0, Math.min(100, trustScore));
 
-  // Determine Verdict
+  // Determine Verdict & Accurate Tiered Status
   let verdict: UrlCheckResult['verdict'] = 'safe';
-  let statusTitle = '✅ Verified Authentic Official Website';
-  let summary = `This URL belongs to the verified official domain for ${detectedBrand || rootDomain} with secure TLS encryption.`;
+  let statusTitle = '🌐 Standard Domain (No Threats Detected)';
+  let summary = `Standard web domain with HTTPS encryption. No deceptive subdomains or known threat patterns detected. (Note: This is an independent domain, not an official registered banking or institutional service).`;
 
-  if (trustScore < 40) {
+  if (isAuthenticBrandDomain && redFlags.length === 0 && protocol === 'https') {
+    // TIER 1: VERIFIED OFFICIAL BRAND PORTAL (100/100)
+    verdict = 'safe';
+    trustScore = 100;
+    statusTitle = '🛡️ 100% Verified Official Brand Portal';
+    summary = `Confirmed authentic official primary portal for ${detectedBrand}${brandCategory ? ` (${brandCategory})` : ''} with encrypted HTTPS transport.`;
+    safetyAdvice.push(`Verified official web presence for ${detectedBrand}. Safe for standard account interactions.`);
+    safetyAdvice.push('Always ensure two-factor authentication is active on your personal accounts.');
+  } else if (trustScore < 40) {
+    // TIER 4: CRITICAL PHISHING / IMPERSONATION TRAP (0-39/100)
     verdict = 'critical';
     statusTitle = '🚨 DANGEROUS: Phishing or Malicious Trap';
     summary = detectedBrand 
@@ -397,15 +406,19 @@ export function scanUrl(rawInput: string): UrlCheckResult {
       safetyAdvice.push('Open a fresh browser tab and manually type the official website address.');
     }
     safetyAdvice.push('If this link was received via SMS or email, report it as junk/phishing immediately.');
-  } else if (trustScore < 75) {
+  } else if (trustScore < 75 || redFlags.length > 0) {
+    // TIER 3: CAUTION / SUSPICIOUS DOMAIN (40-74/100)
     verdict = 'suspicious';
     statusTitle = '⚠️ CAUTION: Unverified or Questionable Domain';
-    summary = 'This website is not an official verified major service domain. Exercise caution before entering credentials or downloading files.';
+    summary = 'This website exhibits questionable indicators (such as unencrypted HTTP, disposable high-risk TLD, or hyphen stuffing). Exercise caution.';
     safetyAdvice.push('Verify the identity of the sender through an independent, trusted channel.');
     safetyAdvice.push('Check your browser address bar to confirm the domain matches the organization you expect.');
   } else {
-    safetyAdvice.push('Official domain verified in offline brand database with encrypted HTTPS transport.');
-    safetyAdvice.push('Safe to browse, but always ensure two-factor authentication is active on your accounts.');
+    // TIER 2: STANDARD BENIGN INDEPENDENT DOMAIN (75/100)
+    verdict = 'safe';
+    trustScore = 75;
+    safetyAdvice.push('Standard domain with encrypted HTTPS transport.');
+    safetyAdvice.push('Verify sender identity before entering personal, login, or payment details on unvetted websites.');
   }
 
   return {

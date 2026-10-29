@@ -2,14 +2,24 @@ import { describe, it, expect } from 'vitest';
 import { scanUrl } from '../services/urlScannerService';
 
 describe('Website & Link Trust Scanner', () => {
-  it('identifies authentic verified brand domains as safe and returns real portal links', () => {
+  it('identifies authentic verified brand domains as safe and returns real portal links with 100/100 score', () => {
     const res = scanUrl('https://www.chase.com');
     expect(res.verdict).toBe('safe');
-    expect(res.trustScore).toBeGreaterThanOrEqual(90);
+    expect(res.trustScore).toBe(100);
     expect(res.isAuthenticBrandDomain).toBe(true);
     expect(res.detectedBrand).toBe('Chase Bank');
     expect(res.rootDomain).toBe('chase.com');
+    expect(res.statusTitle).toContain('100% Verified');
     expect(res.authenticAlternativeUrls?.length).toBeGreaterThan(0);
+  });
+
+  it('rates standard benign domains appropriately at 75/100 without claiming verified brand status', () => {
+    const res = scanUrl('https://mydomain.net/about862');
+    expect(res.verdict).toBe('safe');
+    expect(res.trustScore).toBe(75);
+    expect(res.isAuthenticBrandDomain).toBe(false);
+    expect(res.statusTitle).toContain('Standard Domain');
+    expect(res.statusTitle).not.toContain('Verified Official Brand');
   });
 
   it('identifies official USPS tracking link as safe', () => {

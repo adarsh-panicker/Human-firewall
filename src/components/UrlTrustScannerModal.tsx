@@ -249,22 +249,28 @@ export const UrlTrustScannerModal: React.FC<UrlTrustScannerModalProps> = ({
               
               {/* Verdict Banner */}
               <div className={`p-5 rounded-2xl border flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xl ${
-                result.verdict === 'safe'
-                  ? 'bg-emerald-950/40 border-emerald-500/50'
-                  : result.verdict === 'suspicious'
-                    ? 'bg-amber-950/40 border-amber-500/50'
-                    : 'bg-rose-950/40 border-rose-500/50'
+                result.isAuthenticBrandDomain
+                  ? 'bg-emerald-950/40 border-emerald-500/60 shadow-emerald-500/10'
+                  : result.verdict === 'safe'
+                    ? 'bg-navy-950/80 border-cyan-500/40 shadow-cyan-500/5'
+                    : result.verdict === 'suspicious'
+                      ? 'bg-amber-950/40 border-amber-500/50'
+                      : 'bg-rose-950/40 border-rose-500/50'
               }`}>
                 <div className="flex items-start gap-3.5">
                   <div className={`p-3 rounded-2xl shrink-0 ${
-                    result.verdict === 'safe'
+                    result.isAuthenticBrandDomain
                       ? 'bg-emerald-500/20 text-emerald-400'
-                      : result.verdict === 'suspicious'
-                        ? 'bg-amber-500/20 text-amber-400'
-                        : 'bg-rose-500/20 text-rose-400'
+                      : result.verdict === 'safe'
+                        ? 'bg-cyan-500/20 text-cyan-400'
+                        : result.verdict === 'suspicious'
+                          ? 'bg-amber-500/20 text-amber-400'
+                          : 'bg-rose-500/20 text-rose-400'
                   }`}>
-                    {result.verdict === 'safe' ? (
+                    {result.isAuthenticBrandDomain ? (
                       <ShieldCheck className="w-8 h-8" />
+                    ) : result.verdict === 'safe' ? (
+                      <Globe className="w-8 h-8" />
                     ) : result.verdict === 'suspicious' ? (
                       <AlertTriangle className="w-8 h-8" />
                     ) : (
@@ -278,8 +284,13 @@ export const UrlTrustScannerModal: React.FC<UrlTrustScannerModalProps> = ({
                         {result.statusTitle}
                       </h3>
                       {result.detectedBrand && (
-                        <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-navy-900 text-cyan-300 border border-navy-700">
-                          Brand: {result.detectedBrand} {result.brandCategory ? `(${result.brandCategory})` : ''}
+                        <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold border ${
+                          result.isAuthenticBrandDomain 
+                            ? 'bg-emerald-950 text-emerald-300 border-emerald-700' 
+                            : 'bg-navy-900 text-cyan-300 border-navy-700'
+                        }`}>
+                          {result.isAuthenticBrandDomain ? 'Official Verified: ' : 'Target Brand: '}
+                          {result.detectedBrand} {result.brandCategory ? `(${result.brandCategory})` : ''}
                         </span>
                       )}
                     </div>
@@ -289,14 +300,25 @@ export const UrlTrustScannerModal: React.FC<UrlTrustScannerModalProps> = ({
                   </div>
                 </div>
 
-                <div className="text-right shrink-0 bg-navy-950/80 px-4 py-3 rounded-xl border border-navy-800">
+                <div className="text-right shrink-0 bg-navy-950/90 px-4 py-3 rounded-xl border border-navy-800">
                   <span className="text-[10px] font-mono text-slate-400 uppercase block">Trust Score</span>
                   <div className={`text-3xl font-black font-mono ${
-                    result.verdict === 'safe' ? 'text-emerald-400' : result.verdict === 'suspicious' ? 'text-amber-400' : 'text-rose-400'
+                    result.isAuthenticBrandDomain 
+                      ? 'text-emerald-400' 
+                      : result.verdict === 'safe' 
+                        ? 'text-cyan-400' 
+                        : result.verdict === 'suspicious' 
+                          ? 'text-amber-400' 
+                          : 'text-rose-400'
                   }`}>
                     {result.trustScore}
                     <span className="text-xs text-slate-500 font-normal">/100</span>
                   </div>
+                  <span className={`text-[10px] font-mono uppercase font-bold block mt-0.5 ${
+                    result.isAuthenticBrandDomain ? 'text-emerald-400' : result.verdict === 'safe' ? 'text-cyan-400' : result.verdict === 'suspicious' ? 'text-amber-400' : 'text-rose-400'
+                  }`}>
+                    {result.isAuthenticBrandDomain ? '★ Official 100/100 ★' : result.verdict === 'safe' ? 'Standard Safe' : result.verdict === 'suspicious' ? 'Questionable' : 'Phishing Trap'}
+                  </span>
                 </div>
               </div>
 
