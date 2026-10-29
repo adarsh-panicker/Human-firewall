@@ -1,4 +1,16 @@
-import { getStoredGeminiKey } from './aiService';
+export interface OfficialPortalLink {
+  label: string;
+  url: string;
+  description: string;
+}
+
+export interface VerifiedBrandEntry {
+  brand: string;
+  category: 'Banking & Finance' | 'Postal & Delivery' | 'Streaming & Media' | 'Big Tech & Cloud' | 'Social & Messaging' | 'E-Commerce & Retail' | 'Government & Utilities';
+  officialRootDomains: string[];
+  officialPortalUrls: OfficialPortalLink[];
+  knownScamTricks: string[];
+}
 
 export interface UrlCheckResult {
   url: string;
@@ -15,7 +27,9 @@ export interface UrlCheckResult {
   summary: string;
   
   detectedBrand?: string;
+  brandCategory?: string;
   isAuthenticBrandDomain: boolean;
+  authenticAlternativeUrls?: OfficialPortalLink[];
   
   redFlags: string[];
   safetyAdvice: string[];
@@ -27,28 +41,173 @@ export interface UrlCheckResult {
     tldLabel: string;
     pathLabel: string;
   };
-  
-  isAiEnhanced?: boolean;
 }
 
-// Trusted major brand root domains
-const TRUSTED_BRAND_DOMAINS: Record<string, string[]> = {
-  'Google': ['google.com', 'accounts.google.com', 'youtube.com', 'gmail.com'],
-  'Apple': ['apple.com', 'icloud.com'],
-  'Microsoft': ['microsoft.com', 'live.com', 'office.com', 'outlook.com', 'azure.com'],
-  'Amazon': ['amazon.com', 'aws.amazon.com', 'media-amazon.com'],
-  'Netflix': ['netflix.com'],
-  'PayPal': ['paypal.com'],
-  'Chase Bank': ['chase.com'],
-  'Wells Fargo': ['wellsfargo.com'],
-  'Bank of America': ['bankofamerica.com'],
-  'USPS': ['usps.com'],
-  'FedEx': ['fedex.com'],
-  'UPS': ['ups.com'],
-  'Facebook / Meta': ['facebook.com', 'instagram.com', 'whatsapp.com', 'meta.com'],
-  'TikTok': ['tiktok.com'],
-  'Steam': ['steampowered.com', 'steamcommunity.com'],
-  'Twitter / X': ['x.com', 'twitter.com']
+/**
+ * Comprehensive Offline Database of Real Authentic Verified Websites
+ * (100% Client-Side, Works Offline with Zero Network Calls)
+ */
+export const VERIFIED_BRAND_REGISTRY: Record<string, VerifiedBrandEntry> = {
+  'Chase Bank': {
+    brand: 'Chase Bank',
+    category: 'Banking & Finance',
+    officialRootDomains: ['chase.com'],
+    officialPortalUrls: [
+      { label: 'Chase Online Banking', url: 'https://www.chase.com', description: 'Official consumer homepage & sign-in' },
+      { label: 'Chase Secure Sign-On', url: 'https://secure.chase.com', description: 'Direct encrypted banking portal' },
+      { label: 'Chase Fraud Education', url: 'https://www.chase.com/personal/security', description: 'Official fraud alerts and security center' }
+    ],
+    knownScamTricks: ['Subdomain prepending (e.g. chase.com.verify-login.net)', 'Reverse-Zelle telephone verification OTPs']
+  },
+  'Bank of America': {
+    brand: 'Bank of America',
+    category: 'Banking & Finance',
+    officialRootDomains: ['bankofamerica.com', 'bofa.com'],
+    officialPortalUrls: [
+      { label: 'Bank of America Homepage', url: 'https://www.bankofamerica.com', description: 'Official banking portal' },
+      { label: 'Encrypted Sign-In Gateway', url: 'https://secure.bankofamerica.com', description: 'Official customer sign-on' }
+    ],
+    knownScamTricks: ['SMS panic messages claiming card locked', 'Fake wire authorization links']
+  },
+  'Wells Fargo': {
+    brand: 'Wells Fargo',
+    category: 'Banking & Finance',
+    officialRootDomains: ['wellsfargo.com'],
+    officialPortalUrls: [
+      { label: 'Wells Fargo Official Home', url: 'https://www.wellsfargo.com', description: 'Official online banking portal' },
+      { label: 'Secure Sign-On', url: 'https://connect.secure.wellsfargo.com', description: 'Official authentication screen' }
+    ],
+    knownScamTricks: ['Zelle overpayment refund scams', 'Account suspension warning SMS']
+  },
+  'PayPal': {
+    brand: 'PayPal',
+    category: 'Banking & Finance',
+    officialRootDomains: ['paypal.com', 'paypal.me'],
+    officialPortalUrls: [
+      { label: 'PayPal Official Sign-In', url: 'https://www.paypal.com/signin', description: 'Official payments & wallet login' },
+      { label: 'PayPal Resolution Center', url: 'https://www.paypal.com/disputes', description: 'Official transaction dispute manager' }
+    ],
+    knownScamTricks: ['Fake invoice auto-renewal emails (e.g. $499 Bitcoin charge)', 'Typosquats like paypa1.com']
+  },
+  'USPS (US Postal Service)': {
+    brand: 'USPS (US Postal Service)',
+    category: 'Postal & Delivery',
+    officialRootDomains: ['usps.com'],
+    officialPortalUrls: [
+      { label: 'Official USPS Package Tracking', url: 'https://tools.usps.com/go/TrackConfirmAction_input', description: 'Real tracking tool (never asks for redelivery fees via SMS)' },
+      { label: 'USPS Official Portal', url: 'https://www.usps.com', description: 'Official United States Postal Service homepage' }
+    ],
+    knownScamTricks: ['Smishing claiming incomplete address', 'Demanding $1.95 redelivery fee to harvest credit cards']
+  },
+  'FedEx': {
+    brand: 'FedEx',
+    category: 'Postal & Delivery',
+    officialRootDomains: ['fedex.com'],
+    officialPortalUrls: [
+      { label: 'FedEx Official Tracking', url: 'https://www.fedex.com/en-us/tracking.html', description: 'Official package tracking portal' },
+      { label: 'FedEx Home', url: 'https://www.fedex.com', description: 'Official courier homepage' }
+    ],
+    knownScamTricks: ['SMS notifications with fake tracking numbers', 'Customs clearance fee payment requests']
+  },
+  'UPS': {
+    brand: 'UPS',
+    category: 'Postal & Delivery',
+    officialRootDomains: ['ups.com'],
+    officialPortalUrls: [
+      { label: 'UPS Official Tracking', url: 'https://www.ups.com/track', description: 'Official UPS tracking tool' },
+      { label: 'UPS Home', url: 'https://www.ups.com', description: 'Official courier homepage' }
+    ],
+    knownScamTricks: ['Delivery reschedule fee phishing links', 'Attached malicious PDF shipping labels']
+  },
+  'Netflix': {
+    brand: 'Netflix',
+    category: 'Streaming & Media',
+    officialRootDomains: ['netflix.com'],
+    officialPortalUrls: [
+      { label: 'Netflix Official Home', url: 'https://www.netflix.com', description: 'Official streaming entertainment site' },
+      { label: 'Netflix Account & Billing', url: 'https://www.netflix.com/youraccount', description: 'Official subscription management' }
+    ],
+    knownScamTricks: ['Fake membership suspended emails', 'Card expired phishing prompts with .cc/.top domains']
+  },
+  'Apple': {
+    brand: 'Apple',
+    category: 'Big Tech & Cloud',
+    officialRootDomains: ['apple.com', 'icloud.com'],
+    officialPortalUrls: [
+      { label: 'Official Apple ID Management', url: 'https://appleid.apple.com', description: 'Official security, devices, and 2FA settings' },
+      { label: 'iCloud Web Portal', url: 'https://www.icloud.com', description: 'Official cloud mail, photos, and Find My' }
+    ],
+    knownScamTricks: ['Lookalike domains like appleid-verify.com', 'Stolen phone Find My phishing texts']
+  },
+  'Google': {
+    brand: 'Google',
+    category: 'Big Tech & Cloud',
+    officialRootDomains: ['google.com', 'youtube.com', 'gmail.com'],
+    officialPortalUrls: [
+      { label: 'Google Account Security', url: 'https://myaccount.google.com/security', description: 'Official 2-step verification and device audits' },
+      { label: 'Google Accounts Gateway', url: 'https://accounts.google.com/signin', description: 'Official authentication sign-in' }
+    ],
+    knownScamTricks: ['Subdomain prepending on cloud hosting', 'Fake storage quota exceeded warnings']
+  },
+  'Microsoft': {
+    brand: 'Microsoft',
+    category: 'Big Tech & Cloud',
+    officialRootDomains: ['microsoft.com', 'live.com', 'office.com', 'outlook.com'],
+    officialPortalUrls: [
+      { label: 'Microsoft Account Security', url: 'https://account.microsoft.com', description: 'Official Microsoft consumer account portal' },
+      { label: 'Office 365 Cloud Login', url: 'https://login.microsoftonline.com', description: 'Official commercial enterprise gateway' }
+    ],
+    knownScamTricks: ['Tech support fullscreen scareware popups', 'Fake Teams meeting invitations']
+  },
+  'Amazon': {
+    brand: 'Amazon',
+    category: 'E-Commerce & Retail',
+    officialRootDomains: ['amazon.com'],
+    officialPortalUrls: [
+      { label: 'Amazon Your Orders', url: 'https://www.amazon.com/your-orders', description: 'Official purchase and shipment history' },
+      { label: 'Amazon Security Settings', url: 'https://www.amazon.com/cpe/yourpayments/wallet', description: 'Official payment methods management' }
+    ],
+    knownScamTricks: ['High-value iPhone purchase confirmation emails', 'Fake order cancellation call centers']
+  },
+  'Best Buy / Geek Squad': {
+    brand: 'Best Buy / Geek Squad',
+    category: 'E-Commerce & Retail',
+    officialRootDomains: ['bestbuy.com'],
+    officialPortalUrls: [
+      { label: 'Best Buy Official Portal', url: 'https://www.bestbuy.com', description: 'Official store & subscription portal' },
+      { label: 'Geek Squad Official Support', url: 'https://www.bestbuy.com/services', description: 'Official customer support & appointments' }
+    ],
+    knownScamTricks: ['Fake $499 auto-renewal invoice emails', 'Remote desktop screen-sharing refund scams']
+  },
+  'TikTok': {
+    brand: 'TikTok',
+    category: 'Social & Messaging',
+    officialRootDomains: ['tiktok.com'],
+    officialPortalUrls: [
+      { label: 'TikTok Official', url: 'https://www.tiktok.com', description: 'Official video platform' }
+    ],
+    knownScamTricks: ['Typosquats with zero: tikt0k.co', '"Is this you in this video?" friend DM phishing']
+  },
+  'Meta / Instagram': {
+    brand: 'Meta / Instagram',
+    category: 'Social & Messaging',
+    officialRootDomains: ['instagram.com', 'facebook.com', 'whatsapp.com', 'meta.com'],
+    officialPortalUrls: [
+      { label: 'Instagram Login', url: 'https://www.instagram.com', description: 'Official Instagram portal' },
+      { label: 'Facebook Security', url: 'https://www.facebook.com/security', description: 'Official privacy & login settings' }
+    ],
+    knownScamTricks: ['Copyright infringement warning DMs', 'Hacked friend account loan requests']
+  },
+  'IRS (Internal Revenue Service)': {
+    brand: 'IRS (Internal Revenue Service)',
+    category: 'Government & Utilities',
+    officialRootDomains: ['irs.gov'],
+    officialPortalUrls: [
+      { label: 'IRS Official Tax Portal', url: 'https://www.irs.gov', description: 'Only .gov is official (never .com or .org)' },
+      { label: 'View Your Tax Account', url: 'https://www.irs.gov/your-account', description: 'Official tax records & balance' }
+    ],
+    knownScamTricks: ['Arrest warrant phone calls for unpaid taxes', 'Tax refund claim SMS links with .top/.online domains']
+  }
 };
 
 // High-risk TLDs frequently abused by phishing & scam operations
@@ -78,9 +237,9 @@ function normalizeLeet(str: string): string {
 }
 
 /**
- * Dissect and scan any URL for fraud, phishing, typosquatting, and legitimacy
+ * Dissect and scan any URL against our offline verified database and heuristic rules
  */
-export async function scanUrl(rawInput: string): Promise<UrlCheckResult> {
+export function scanUrl(rawInput: string): UrlCheckResult {
   const trimmed = rawInput.trim();
   let urlStr = trimmed;
   if (!urlStr.startsWith('http://') && !urlStr.startsWith('https://')) {
@@ -138,9 +297,11 @@ export async function scanUrl(rawInput: string): Promise<UrlCheckResult> {
 
   const redFlags: string[] = [];
   const safetyAdvice: string[] = [];
-  let trustScore = 85; // baseline start
+  let trustScore = 85;
   let detectedBrand: string | undefined = undefined;
+  let brandCategory: string | undefined = undefined;
   let isAuthenticBrandDomain = false;
+  let authenticAlternativeUrls: OfficialPortalLink[] | undefined = undefined;
 
   // 1. IP Address as host
   if (isIpAddress) {
@@ -150,7 +311,7 @@ export async function scanUrl(rawInput: string): Promise<UrlCheckResult> {
 
   // 2. Plaintext HTTP Check
   if (protocol === 'http') {
-    redFlags.push('Unencrypted connection (HTTP). Anyone on your Wi-Fi or ISP can inspect traffic, passwords, and inject malware.');
+    redFlags.push('Unencrypted connection (HTTP). Anyone on your Wi-Fi or network can intercept credentials and inject malware.');
     trustScore -= 30;
   }
 
@@ -160,31 +321,38 @@ export async function scanUrl(rawInput: string): Promise<UrlCheckResult> {
     trustScore -= 25;
   }
 
-  // 4. Brand Impersonation & Typosquatting Analysis
+  // 4. Check Offline Database of Verified Brands
   const normalizedHost = normalizeLeet(hostname);
-  for (const [brand, trustedDomains] of Object.entries(TRUSTED_BRAND_DOMAINS)) {
-    const brandLower = brand.toLowerCase().split(' ')[0]; // e.g. "netflix", "chase"
+
+  for (const entry of Object.values(VERIFIED_BRAND_REGISTRY)) {
+    const brandLower = entry.brand.toLowerCase().split(' ')[0];
 
     // Check if authentic domain
-    if (trustedDomains.some(d => hostname === d || hostname.endsWith(`.${d}`))) {
-      detectedBrand = brand;
+    if (entry.officialRootDomains.some(d => hostname === d || hostname.endsWith(`.${d}`))) {
+      detectedBrand = entry.brand;
+      brandCategory = entry.category;
       isAuthenticBrandDomain = true;
+      authenticAlternativeUrls = entry.officialPortalUrls;
       break;
     }
 
     // Check for deceptive subdomain prepending (e.g. chase.com.attacker-site.com)
     if (subdomain.includes(brandLower) || hostname.includes(brandLower)) {
-      detectedBrand = brand;
+      detectedBrand = entry.brand;
+      brandCategory = entry.category;
+      authenticAlternativeUrls = entry.officialPortalUrls;
       if (!isAuthenticBrandDomain) {
-        redFlags.push(`Brand Impersonation: Mentions "${brand}" in URL, but the actual owning domain is "${rootDomain}".`);
+        redFlags.push(`Brand Impersonation: Mentions "${entry.brand}" in URL, but the actual owning domain is "${rootDomain}".`);
         trustScore -= 45;
       }
     }
 
     // Check typosquatting via character substitution (e.g. tikt0k, paypa1)
     if (!isAuthenticBrandDomain && normalizedHost.includes(brandLower) && !hostname.includes(brandLower)) {
-      detectedBrand = brand;
-      redFlags.push(`Typosquatting Detected: Cleverly substitutes characters to mimic ${brand} (e.g. using '0' instead of 'O' or '1' instead of 'L').`);
+      detectedBrand = entry.brand;
+      brandCategory = entry.category;
+      authenticAlternativeUrls = entry.officialPortalUrls;
+      redFlags.push(`Typosquatting Detected: Cleverly substitutes characters to mimic ${entry.brand} (e.g. using '0' instead of 'O' or '1' instead of 'L').`);
       trustScore -= 50;
     }
   }
@@ -192,7 +360,7 @@ export async function scanUrl(rawInput: string): Promise<UrlCheckResult> {
   // 5. Hyphenated Domain stuffing (e.g. usps-redelivery-portal-track.com)
   const hyphenCount = (hostname.match(/-/g) || []).length;
   if (hyphenCount >= 2 && !isAuthenticBrandDomain) {
-    redFlags.push(`Excessive hyphen stuffing (${hyphenCount} hyphens): Scammers chain keywords to look legitimate.`);
+    redFlags.push(`Excessive hyphen stuffing (${hyphenCount} hyphens): Scammers chain trusted keywords to appear legitimate.`);
     trustScore -= 20;
   }
 
@@ -204,7 +372,7 @@ export async function scanUrl(rawInput: string): Promise<UrlCheckResult> {
 
   // 7. Legitimate Authenticated Domain Boost
   if (isAuthenticBrandDomain && protocol === 'https' && redFlags.length === 0) {
-    trustScore = 98;
+    trustScore = 99;
   }
 
   // Clamp trust score 0-100
@@ -212,8 +380,8 @@ export async function scanUrl(rawInput: string): Promise<UrlCheckResult> {
 
   // Determine Verdict
   let verdict: UrlCheckResult['verdict'] = 'safe';
-  let statusTitle = 'Verified Authentic & Safe';
-  let summary = `This URL belongs to the authentic, verified domain for ${detectedBrand || rootDomain} with secure TLS encryption.`;
+  let statusTitle = '✅ Verified Authentic Official Website';
+  let summary = `This URL belongs to the verified official domain for ${detectedBrand || rootDomain} with secure TLS encryption.`;
 
   if (trustScore < 40) {
     verdict = 'critical';
@@ -223,7 +391,11 @@ export async function scanUrl(rawInput: string): Promise<UrlCheckResult> {
       : `High-risk indicators detected. This domain exhibits characteristics common in phishing, credential harvesting, or malware distribution.`;
     
     safetyAdvice.push('DO NOT click this link or enter passwords, credit cards, or personal information.');
-    safetyAdvice.push(`To access ${detectedBrand || 'your account'}, open a fresh browser tab and manually type the official website.`);
+    if (detectedBrand && authenticAlternativeUrls && authenticAlternativeUrls.length > 0) {
+      safetyAdvice.push(`Go directly to the real verified site: ${authenticAlternativeUrls[0].url}`);
+    } else {
+      safetyAdvice.push('Open a fresh browser tab and manually type the official website address.');
+    }
     safetyAdvice.push('If this link was received via SMS or email, report it as junk/phishing immediately.');
   } else if (trustScore < 75) {
     verdict = 'suspicious';
@@ -232,39 +404,8 @@ export async function scanUrl(rawInput: string): Promise<UrlCheckResult> {
     safetyAdvice.push('Verify the identity of the sender through an independent, trusted channel.');
     safetyAdvice.push('Check your browser address bar to confirm the domain matches the organization you expect.');
   } else {
-    safetyAdvice.push('Official domain verified with encrypted HTTPS transport.');
-    safetyAdvice.push('Safe to browse, but always ensure two-factor authentication is enabled on your accounts.');
-  }
-
-  // Optional AI Intelligence enhancement (if Gemini key available)
-  let isAiEnhanced = false;
-  const apiKey = getStoredGeminiKey();
-  if (apiKey && trimmed.length > 5) {
-    try {
-      const prompt = `You are a cybersecurity URL inspector for Human Firewall.
-Analyze this URL: "${trimmed}".
-Return a single concise sentence summarizing the safety verdict and domain owner.`;
-
-      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: { temperature: 0.1, maxOutputTokens: 100 }
-        })
-      });
-
-      if (res.ok) {
-        const data = await res.json();
-        const aiSummary = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
-        if (aiSummary) {
-          summary = `${summary} (AI Note: ${aiSummary})`;
-          isAiEnhanced = true;
-        }
-      }
-    } catch {
-      // Graceful fallback to deterministic local analysis
-    }
+    safetyAdvice.push('Official domain verified in offline brand database with encrypted HTTPS transport.');
+    safetyAdvice.push('Safe to browse, but always ensure two-factor authentication is active on your accounts.');
   }
 
   return {
@@ -280,7 +421,9 @@ Return a single concise sentence summarizing the safety verdict and domain owner
     statusTitle,
     summary,
     detectedBrand,
+    brandCategory,
     isAuthenticBrandDomain,
+    authenticAlternativeUrls,
     redFlags,
     safetyAdvice,
     anatomy: {
@@ -289,7 +432,6 @@ Return a single concise sentence summarizing the safety verdict and domain owner
       rootDomainLabel: rootDomain,
       tldLabel: tld ? `.${tld}` : '',
       pathLabel: path || '/'
-    },
-    isAiEnhanced
+    }
   };
 }

@@ -17,7 +17,7 @@ describe('AI Cyber Copilot & Forensic Service', () => {
     const scenario = await generatePlayableScenario('Urgent Hospital Bill SMS', 'everyday');
 
     expect(scenario).toBeDefined();
-    expect(scenario.id).toContain('sc-ai-');
+    expect(scenario.id).toContain('sc-synth-offline-');
     expect(scenario.title).toBeDefined();
     expect(scenario.options.length).toBeGreaterThanOrEqual(2);
     expect(scenario.forensicClues?.length).toBeGreaterThanOrEqual(1);

@@ -88,10 +88,10 @@ export const GameDashboard: React.FC<GameDashboardProps> = ({
                   onOpenAiCopilot();
                 }}
                 className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-r from-teal-500/20 to-cyan-500/20 hover:from-teal-500/30 hover:to-cyan-500/30 border border-cyan-500/50 text-cyan-300 text-xs font-bold transition-all shadow-md shadow-cyan-500/10"
-                title="Launch the AI Cyber Copilot & Threat Forensic Lab"
+                title="Launch the Cyber Threat Forensic Lab"
               >
                 <Zap className="w-3.5 h-3.5 text-cyan-400" />
-                <span>AI Forensic Lab</span>
+                <span>Threat Lab</span>
               </button>
             )}
             <button

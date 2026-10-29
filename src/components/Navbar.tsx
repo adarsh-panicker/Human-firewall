@@ -1,5 +1,5 @@
 import React from 'react';
-import { Shield, Zap, Volume2, VolumeX, Home, HelpCircle, Globe } from 'lucide-react';
+import { Shield, Zap, Volume2, VolumeX, Home, HelpCircle, Globe, ShieldAlert } from 'lucide-react';
 import { UserProfile } from '../types/game';
 
 interface NavbarProps {
@@ -78,10 +78,10 @@ export const Navbar: React.FC<NavbarProps> = ({
           <button
             onClick={onOpenAiCopilot}
             className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-gradient-to-r from-teal-500/15 to-cyan-500/15 border border-cyan-500/40 text-cyan-300 hover:bg-cyan-500/25 transition-all shadow-sm"
-            title="Launch the AI Cyber Copilot & Forensic Threat Deconstruction Lab"
+            title="Launch the Cyber Threat Forensic Lab"
           >
-            <Zap className="w-3.5 h-3.5 text-cyan-400" />
-            <span>AI Lab</span>
+            <ShieldAlert className="w-3.5 h-3.5 text-cyan-400" />
+            <span>Threat Lab</span>
           </button>
 
           <button

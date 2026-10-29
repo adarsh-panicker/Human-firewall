@@ -81,24 +81,25 @@ For Office Professionals and IT Administrators:
 - **Executive WhatsApp Impersonation:** CEO urgently requesting $2,000 in gift cards during a closed-door meeting.
 - **Untrusted Internal Tool SSL Warning:** Self-signed root CA certificate override dilemma.
 
-### C. Website & Link Trust Scanner
-A multi-layer URL forensic analyzer accessible directly from the navigation bar:
+### C. Website & Link Trust Scanner (with Offline Real Websites Database)
+A multi-layer URL forensic analyzer accessible directly from the navigation bar, backed by an embedded offline directory of verified real websites:
+- **Offline Verified Real Portals Registry:** Contains verified real domains and official links across Banking (Chase, Bank of America, Wells Fargo, PayPal), Postal Delivery (USPS, FedEx, UPS), Streaming (Netflix, Spotify, Disney+), Big Tech (Apple, Google, Microsoft, Amazon), E-Commerce (Best Buy Geek Squad), and Government (IRS).
+- **1-Click Real Link Alternatives:** When a phishing link is detected (e.g. `usps-redelivery.top` or `netflix-billing-update.cc`), the scanner immediately identifies the impersonated brand and provides the **authentic, official link** with a 1-click copy action.
 - **True Owner Root Domain Detection:** Strips deceptive subdomains and highlights the true destination domain in neon (e.g. `chase.com.security-verify.net` $\rightarrow$ True owner: `security-verify.net`).
 - **Typosquatting & Homoglyph Engine:** Detects character-for-number substitutions (`tikt0k`, `paypa1`, `arnazon`).
 - **Protocol Encryption Audit:** Identifies unencrypted plaintext HTTP transport.
 - **High-Risk TLD Warning:** Flags disposable TLDs (`.top`, `.xyz`, `.cc`, `.tk`, `.online`, `.click`, `.buzz`).
 - **Raw IP Address Check:** Detects numerical IPs (`http://185.220.101.44`) used for credential harvesting.
 - **Executable Payload Warnings:** Detects dangerous extensions (`.exe`, `.apk`, `.zip`, `.scr`) in URL paths.
-- **Authentic Brand Whitelist:** Confirms authentic domains for Chase, Apple, Google, USPS, Netflix, Amazon with verified badges.
 
-### D. AI Cyber Defense Copilot & Forensic Lab
-A dual-mode intelligence hub tailored for Hackathon judging:
-- **100% SafeSpace Hacks Compliant (Default):** Built-in local heuristic engine running offline with zero API keys and zero network calls.
-- **Optional Gemini 2.0 / 1.5 Flash Live Integration:** Bring-Your-Own-Key (BYOK) toggle stored securely in browser `localStorage`.
+### D. Cyber Threat Forensic Lab (100% Offline, Zero-Key Architecture)
+Built specifically to adhere to SafeSpace Hacks 2026 guidelines:
+- **What the Hackathon Rules State:** SafeSpace Hacks 2026 explicitly stipulates: *"Do not require a Gemini API key, paid service, backend account, or external authentication to play the game... Keep the game usable when offline... Do not add AI-generated scoring that cannot be explained or reproduced."*
+- **100% Native Offline Engine:** To ensure complete compliance, the Threat Lab runs **100% locally via deterministic heuristics and natural-language pattern matching**. It requires zero external API keys, zero network tokens, and zero paid cloud subscriptions.
 - **Forensic Threat Deconstruction:** Paste any suspicious SMS, email, or URL to extract psychological levers, severity ratings, and defensive advice.
-- **Infinite Generative Scenario Builder:** Enter any topic (e.g. *"Flight delay refund scam"*) to synthesize an interactive scenario with a 1-click **"Play Scenario Now"** launcher.
-- **Ask Cyber Mentor:** Conversational security coach answering practical questions (voice cloning, gift card extortion, 3-Second Pause Rule).
-- **Compliance Guarantee:** Official challenge scoring is strictly deterministic and rule-based; AI is used purely for educational enrichment.
+- **Offline Scenario Synthesizer:** Enter any topic (e.g. *"Flight delay refund scam"*) to synthesize an interactive scenario with a 1-click **"Play Scenario Now"** launcher.
+- **Cyber Mentor Knowledge Base:** Conversational security coach answering practical questions (AI voice cloning, gift card extortion, 3-Second Pause Rule).
+- **Compliance Guarantee:** Official challenge scoring is strictly deterministic and rule-based (0–100 rubric); no black-box AI scoring.
 
 ### E. Deterministic 0–100 Scoring & 6-Axis Polar Radar
 - Base score: 0

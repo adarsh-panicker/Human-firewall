@@ -1,26 +1,22 @@
 import React, { useState } from 'react';
 import { 
-  Sparkles, 
   X, 
   ShieldAlert, 
   Search, 
   Play, 
   HelpCircle, 
-  Key, 
-  CheckCircle2, 
   AlertTriangle, 
-  RefreshCw,
-  Cpu,
-  BrainCircuit,
-  MessageSquare,
-  ShieldCheck
+  RefreshCw, 
+  Cpu, 
+  BrainCircuit, 
+  MessageSquare, 
+  ShieldCheck,
+  Lock
 } from 'lucide-react';
 import { 
   analyzeThreat, 
   generatePlayableScenario, 
   askSecurityCopilot, 
-  getStoredGeminiKey, 
-  setStoredGeminiKey, 
   ThreatAnalysisResult 
 } from '../services/aiService';
 import { Scenario, ScenarioAudience } from '../types/game';
@@ -61,9 +57,6 @@ export const AiSecurityCopilotModal: React.FC<AiSecurityCopilotModalProps> = ({
   currentScenarioTitle
 }) => {
   const [activeTab, setActiveTab] = useState<TabType>('analyzer');
-  const [geminiKey, setGeminiKey] = useState<string>(getStoredGeminiKey());
-  const [showKeyInput, setShowKeyInput] = useState(false);
-  const [keySaveMessage, setKeySaveMessage] = useState(false);
 
   // Tab 1: Threat Analyzer state
   const [threatInput, setThreatInput] = useState(SAMPLE_THREATS[0].text);
@@ -83,56 +76,38 @@ export const AiSecurityCopilotModal: React.FC<AiSecurityCopilotModalProps> = ({
 
   if (!isOpen) return null;
 
-  const handleSaveKey = () => {
-    setStoredGeminiKey(geminiKey);
-    setKeySaveMessage(true);
-    setTimeout(() => setKeySaveMessage(false), 2500);
-    setShowKeyInput(false);
-  };
-
-  const handleRunAnalysis = async () => {
+  const handleRunAnalysis = () => {
     if (!threatInput.trim()) return;
     soundManager.playClick();
     setIsAnalyzing(true);
-    try {
-      const res = await analyzeThreat(threatInput, geminiKey);
+    setTimeout(() => {
+      const res = analyzeThreat(threatInput);
       setAnalysisResult(res);
-    } catch {
-      // Handled in service fallback
-    } finally {
       setIsAnalyzing(false);
-    }
+    }, 200);
   };
 
-  const handleRunGeneration = async () => {
+  const handleRunGeneration = () => {
     if (!generatorTopic.trim()) return;
     soundManager.playClick();
     setIsGenerating(true);
-    try {
-      const scenario = await generatePlayableScenario(generatorTopic, generatorAudience, geminiKey);
+    setTimeout(() => {
+      const scenario = generatePlayableScenario(generatorTopic, generatorAudience);
       setGeneratedScenario(scenario);
-    } catch {
-      // Handled in service fallback
-    } finally {
       setIsGenerating(false);
-    }
+    }, 250);
   };
 
-  const handleRunMentor = async () => {
+  const handleRunMentor = () => {
     if (!mentorQuestion.trim()) return;
     soundManager.playClick();
     setIsAskingMentor(true);
-    try {
-      const ans = await askSecurityCopilot(mentorQuestion, currentScenarioTitle, geminiKey);
+    setTimeout(() => {
+      const ans = askSecurityCopilot(mentorQuestion, currentScenarioTitle);
       setMentorAnswer(ans);
-    } catch {
-      // Handled in service fallback
-    } finally {
       setIsAskingMentor(false);
-    }
+    }, 150);
   };
-
-  const hasApiKey = Boolean(geminiKey.trim());
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-navy-950/85 backdrop-blur-md animate-in fade-in">
@@ -147,76 +122,26 @@ export const AiSecurityCopilotModal: React.FC<AiSecurityCopilotModalProps> = ({
             <div>
               <div className="flex items-center gap-2 flex-wrap">
                 <h2 className="text-xl font-extrabold text-white tracking-tight">
-                  AI Cyber Defense Copilot & Forensic Lab
+                  Cyber Threat Forensic Lab
                 </h2>
-                <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold border ${
-                  hasApiKey 
-                    ? 'bg-emerald-950/80 text-emerald-300 border-emerald-600/70' 
-                    : 'bg-cyan-950/80 text-cyan-300 border-cyan-700/70'
-                }`}>
-                  {hasApiKey ? <Sparkles className="w-2.5 h-2.5 text-emerald-400" /> : <Cpu className="w-2.5 h-2.5 text-cyan-400" />}
-                  <span>{hasApiKey ? 'Gemini 2.0 Live Engine' : 'Offline Heuristic Engine (100% Compliant)'}</span>
+                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-950/80 text-emerald-300 border border-emerald-600/70">
+                  <Cpu className="w-2.5 h-2.5 text-emerald-400" />
+                  <span>100% Offline Heuristics • Zero External API Required</span>
                 </span>
               </div>
               <p className="text-xs text-slate-400 mt-0.5">
-                Deconstruct suspicious communications, synthesize custom scenarios, and consult the cyber mentor.
+                Deconstruct suspicious communications, synthesize custom scenarios, and consult the offline cyber mentor.
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setShowKeyInput(!showKeyInput)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-navy-800 hover:bg-navy-700 border border-navy-700 text-slate-300 hover:text-white text-xs font-semibold transition-all"
-              title="Configure Optional Gemini API Key"
-            >
-              <Key className="w-3.5 h-3.5 text-amber-400" />
-              <span className="hidden sm:inline">Gemini API Key</span>
-            </button>
-            <button
-              onClick={onClose}
-              className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-navy-800 transition-colors"
-            >
-              <X className="w-5 h-5" />
-            </button>
-          </div>
+          <button
+            onClick={onClose}
+            className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-navy-800 transition-colors"
+          >
+            <X className="w-5 h-5" />
+          </button>
         </div>
-
-        {/* Optional Gemini API Key Drawer */}
-        {showKeyInput && (
-          <div className="bg-navy-950 p-4 border-b border-navy-800 animate-in slide-in-from-top-2">
-            <div className="max-w-xl mx-auto flex flex-col gap-2">
-              <div className="flex items-center justify-between text-xs text-slate-300">
-                <span className="font-semibold text-cyan-300">Optional Gemini API Key (Stored locally in your browser):</span>
-                <span className="text-[11px] text-slate-400">Zero backend • 100% Client-side</span>
-              </div>
-              <div className="flex gap-2">
-                <input
-                  type="password"
-                  placeholder="AIzaSy... (Leave empty to use built-in offline engine)"
-                  value={geminiKey}
-                  onChange={(e) => setGeminiKey(e.target.value)}
-                  className="flex-1 bg-navy-900 border border-navy-700 rounded-xl px-3.5 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400"
-                />
-                <button
-                  onClick={handleSaveKey}
-                  className="px-4 py-2 rounded-xl bg-cyan-500 text-navy-950 text-xs font-bold hover:bg-cyan-400 transition-all"
-                >
-                  Save Key
-                </button>
-              </div>
-              <p className="text-[11px] text-slate-400">
-                Per SafeSpace Hacks guidelines, Human Firewall requires <strong>no API key or account</strong> to play. If no key is entered, our high-fidelity local heuristic engine runs 100% offline.
-              </p>
-              {keySaveMessage && (
-                <div className="text-xs text-emerald-400 flex items-center gap-1 font-semibold">
-                  <CheckCircle2 className="w-3.5 h-3.5" />
-                  <span>Key saved securely to browser localStorage!</span>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
 
         {/* Tab Selector */}
         <div className="flex border-b border-navy-800 bg-navy-950/40 px-5 pt-3 gap-2">
@@ -240,8 +165,8 @@ export const AiSecurityCopilotModal: React.FC<AiSecurityCopilotModalProps> = ({
                 : 'border-transparent text-slate-400 hover:text-slate-200 hover:bg-navy-900/50'
             }`}
           >
-            <Sparkles className="w-4 h-4 text-amber-400" />
-            <span>AI Scenario Generator</span>
+            <Cpu className="w-4 h-4 text-cyan-400" />
+            <span>Scenario Synthesizer</span>
           </button>
 
           <button
@@ -306,7 +231,7 @@ export const AiSecurityCopilotModal: React.FC<AiSecurityCopilotModalProps> = ({
                 ) : (
                   <>
                     <Search className="w-4 h-4" />
-                    <span>Run AI Forensic Deconstruction</span>
+                    <span>Run Forensic Threat Deconstruction</span>
                   </>
                 )}
               </button>
@@ -378,15 +303,15 @@ export const AiSecurityCopilotModal: React.FC<AiSecurityCopilotModalProps> = ({
             </div>
           )}
 
-          {/* TAB 2: AI SCENARIO GENERATOR */}
+          {/* TAB 2: SCENARIO SYNTHESIZER */}
           {activeTab === 'generator' && (
             <div className="space-y-4">
               <div className="bg-navy-950/70 p-4 rounded-2xl border border-navy-800">
                 <h4 className="text-xs font-bold text-cyan-300 mb-1">
-                  Synthesize an Infinite Realistic Cyber Scenario
+                  Synthesize an Offline Custom Cyber Dilemma
                 </h4>
                 <p className="text-xs text-slate-400 mb-3">
-                  Specify any real-world threat topic. Our engine will generate an interactive scenario with clues, options, and branching educational outcomes.
+                  Specify any real-world threat topic. Our offline engine generates an interactive scenario with clues, options, and branching educational outcomes.
                 </p>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
@@ -422,7 +347,7 @@ export const AiSecurityCopilotModal: React.FC<AiSecurityCopilotModalProps> = ({
                     'Smart Thermostat Firmware Update',
                     'Hotel Front Desk Credit Card Re-swipe',
                     'Healthcare Portal Prescription SMS',
-                    'LinkedIn High-Paying Remote Job Scam'
+                    'LinkedIn Remote Job Scam'
                   ].map((preset, i) => (
                     <button
                       key={i}
@@ -440,7 +365,7 @@ export const AiSecurityCopilotModal: React.FC<AiSecurityCopilotModalProps> = ({
                 <button
                   onClick={handleRunGeneration}
                   disabled={isGenerating || !generatorTopic.trim()}
-                  className="flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-cyan-500 hover:from-amber-400 hover:to-cyan-400 text-navy-950 font-bold text-xs shadow-md transition-all disabled:opacity-50"
+                  className="flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-400 hover:to-cyan-400 text-navy-950 font-bold text-xs shadow-md transition-all disabled:opacity-50"
                 >
                   {isGenerating ? (
                     <>
@@ -449,8 +374,8 @@ export const AiSecurityCopilotModal: React.FC<AiSecurityCopilotModalProps> = ({
                     </>
                   ) : (
                     <>
-                      <Sparkles className="w-4 h-4" />
-                      <span>Generate Playable Scenario</span>
+                      <Cpu className="w-4 h-4" />
+                      <span>Synthesize Playable Scenario</span>
                     </>
                   )}
                 </button>
@@ -564,12 +489,12 @@ export const AiSecurityCopilotModal: React.FC<AiSecurityCopilotModalProps> = ({
 
         </div>
 
-        {/* Footer / Hackathon Compliance Note */}
+        {/* Footer */}
         <div className="p-4 bg-navy-950 border-t border-navy-800 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-slate-400">
           <div className="flex items-center gap-1.5">
-            <ShieldCheck className="w-4 h-4 text-cyan-400 shrink-0" />
+            <Lock className="w-4 h-4 text-emerald-400 shrink-0" />
             <span>
-              <strong>SafeSpace Hacks 2026 Compliance:</strong> Challenge scoring is 100% deterministic & explainable. AI is used solely for threat deconstruction, scenario generation, and coaching.
+              <strong>SafeSpace Hacks 2026 Compliance:</strong> 100% Client-side offline intelligence. Zero API keys, zero network tracking, and deterministic scoring.
             </span>
           </div>
           <button

@@ -8,7 +8,11 @@ import {
   Globe, 
   RefreshCw, 
   ExternalLink,
-  ArrowRight
+  ArrowRight,
+  Check,
+  Copy,
+  Building,
+  Lock
 } from 'lucide-react';
 import { scanUrl, UrlCheckResult } from '../services/urlScannerService';
 import { soundManager } from '../utils/audio';
@@ -19,54 +23,7 @@ interface UrlTrustScannerModalProps {
   initialUrl?: string;
 }
 
-const PRESET_URLS = [
-  {
-    category: '🚨 Common Home Phishing Links',
-    items: [
-      {
-        label: 'Fake USPS Redelivery',
-        url: 'https://usps-redelivery-portal.top/track?id=8812'
-      },
-      {
-        label: 'Fake Chase Subdomain Trap',
-        url: 'https://chase.com.security-alert-verify.net/auth/login'
-      },
-      {
-        label: 'Fake Netflix Billing SMS',
-        url: 'http://netflix-billing-update.cc/account/verify'
-      },
-      {
-        label: 'Fake TikTok Typosquatting',
-        url: 'https://tikt0k-trending-clip.co/watch?id=499'
-      },
-      {
-        label: 'Raw IP Address Portal',
-        url: 'http://185.220.101.44:8080/auth/login'
-      }
-    ]
-  },
-  {
-    category: '🛡️ Real Authentic Services',
-    items: [
-      {
-        label: 'Real Chase Bank',
-        url: 'https://www.chase.com'
-      },
-      {
-        label: 'Real Apple ID Portal',
-        url: 'https://appleid.apple.com'
-      },
-      {
-        label: 'Real Google Accounts',
-        url: 'https://accounts.google.com/signin'
-      },
-      {
-        label: 'Real USPS Package Tracking',
-        url: 'https://tools.usps.com/go/TrackConfirmAction_input'
-      }
-    ]
-  }
-];
+type PresetCategory = 'all' | 'real' | 'fake';
 
 export const UrlTrustScannerModal: React.FC<UrlTrustScannerModalProps> = ({
   isOpen,
@@ -76,26 +33,58 @@ export const UrlTrustScannerModal: React.FC<UrlTrustScannerModalProps> = ({
   const [urlInput, setUrlInput] = useState<string>(initialUrl);
   const [isScanning, setIsScanning] = useState<boolean>(false);
   const [result, setResult] = useState<UrlCheckResult | null>(null);
+  const [presetTab, setPresetTab] = useState<PresetCategory>('all');
+  const [copiedLink, setCopiedLink] = useState<string | null>(null);
 
   if (!isOpen) return null;
 
-  const handleScan = async (overrideUrl?: string) => {
+  const handleScan = (overrideUrl?: string) => {
     const target = (overrideUrl || urlInput).trim();
     if (!target) return;
     soundManager.playClick();
     setIsScanning(true);
-    try {
-      const res = await scanUrl(target);
+    // Instant offline deterministic scan
+    setTimeout(() => {
+      const res = scanUrl(target);
       setResult(res);
-    } finally {
       setIsScanning(false);
-    }
+    }, 150);
   };
 
   const handleSelectPreset = (url: string) => {
     setUrlInput(url);
     handleScan(url);
   };
+
+  const handleCopy = (text: string) => {
+    soundManager.playClick();
+    navigator.clipboard.writeText(text);
+    setCopiedLink(text);
+    setTimeout(() => setCopiedLink(null), 2000);
+  };
+
+  // Compile offline preset list from our verified registry + real lookalikes
+  const realPresets = [
+    { label: 'USPS Official Tracking', url: 'https://tools.usps.com/go/TrackConfirmAction_input', category: 'Postal & Delivery' },
+    { label: 'Chase Online Banking', url: 'https://www.chase.com', category: 'Banking' },
+    { label: 'Netflix Official Login', url: 'https://www.netflix.com/login', category: 'Streaming' },
+    { label: 'Apple ID Security Portal', url: 'https://appleid.apple.com', category: 'Big Tech' },
+    { label: 'Google Account Security', url: 'https://myaccount.google.com/security', category: 'Big Tech' },
+    { label: 'Bank of America Sign In', url: 'https://www.bankofamerica.com', category: 'Banking' },
+    { label: 'PayPal Official Sign-In', url: 'https://www.paypal.com/signin', category: 'Banking' },
+    { label: 'Amazon Your Orders', url: 'https://www.amazon.com/your-orders', category: 'Retail' },
+    { label: 'IRS Official Tax Portal', url: 'https://www.irs.gov', category: 'Government' },
+    { label: 'Best Buy Official Portal', url: 'https://www.bestbuy.com', category: 'Retail' }
+  ];
+
+  const fakePresets = [
+    { label: 'Fake USPS Redelivery ($1.95 Fee)', url: 'https://usps-redelivery-portal.top/track?id=8812', target: 'USPS' },
+    { label: 'Fake Chase Subdomain Trap', url: 'https://chase.com.security-alert-verify.net/auth/login', target: 'Chase Bank' },
+    { label: 'Fake Netflix Billing Suspended', url: 'http://netflix-billing-update.cc/account/verify', target: 'Netflix' },
+    { label: 'Fake TikTok Video Typosquatting', url: 'https://tikt0k-trending-clip.co/watch?id=499', target: 'TikTok' },
+    { label: 'Fake Amazon Gift Card Claim', url: 'http://amazon.com-giftcard-claim.xyz/winner', target: 'Amazon' },
+    { label: 'Raw IP Address Login Trap', url: 'http://185.220.101.44:8080/auth/login', target: 'Raw IP' }
+  ];
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-navy-950/85 backdrop-blur-md animate-in fade-in">
@@ -112,12 +101,12 @@ export const UrlTrustScannerModal: React.FC<UrlTrustScannerModalProps> = ({
                 <h2 className="text-xl font-extrabold text-white tracking-tight">
                   Website & Link Trust Scanner
                 </h2>
-                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-cyan-950 text-cyan-300 border border-cyan-700">
-                  Phishing & Fraud Detection
+                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-950 text-emerald-300 border border-emerald-700">
+                  100% Offline Brand Database Active
                 </span>
               </div>
               <p className="text-xs text-slate-400 mt-0.5">
-                Paste any link or domain to check if it is legitimate, a lookalike fake, or a dangerous phishing trap.
+                Verify if a link is real, fake, or spam. Dissect URLs and compare against real official websites with zero network calls.
               </p>
             </div>
           </div>
@@ -148,7 +137,7 @@ export const UrlTrustScannerModal: React.FC<UrlTrustScannerModalProps> = ({
                   onKeyDown={(e) => {
                     if (e.key === 'Enter') handleScan();
                   }}
-                  placeholder="e.g. https://usps-redelivery.top, chase.com, netflix-update.cc..."
+                  placeholder="e.g. tools.usps.com, chase.com, netflix-update.cc..."
                   className="w-full bg-navy-950 border border-navy-700 rounded-xl pl-10 pr-4 py-3 text-xs sm:text-sm text-white font-mono placeholder-slate-500 focus:outline-none focus:border-cyan-400 transition-colors"
                 />
               </div>
@@ -172,30 +161,84 @@ export const UrlTrustScannerModal: React.FC<UrlTrustScannerModalProps> = ({
               </button>
             </div>
 
-            {/* Quick Test Links */}
+            {/* Quick Test Links & Offline Database Selector */}
             <div className="space-y-2 pt-1">
-              <span className="text-[11px] font-semibold text-slate-400 block">
-                Quick Test Links (Click to test instantly):
-              </span>
+              <div className="flex items-center justify-between gap-2 flex-wrap">
+                <span className="text-[11px] font-semibold text-slate-400">
+                  Offline Database Test Links:
+                </span>
+                <div className="flex items-center gap-1">
+                  <button
+                    onClick={() => setPresetTab('all')}
+                    className={`px-2.5 py-0.5 rounded text-[10px] font-bold transition-colors ${
+                      presetTab === 'all' ? 'bg-cyan-500 text-navy-950' : 'text-slate-400 hover:text-white'
+                    }`}
+                  >
+                    All ({realPresets.length + fakePresets.length})
+                  </button>
+                  <button
+                    onClick={() => setPresetTab('real')}
+                    className={`px-2.5 py-0.5 rounded text-[10px] font-bold transition-colors ${
+                      presetTab === 'real' ? 'bg-emerald-500 text-navy-950' : 'text-emerald-400 hover:text-white'
+                    }`}
+                  >
+                    🛡️ Real Official Links ({realPresets.length})
+                  </button>
+                  <button
+                    onClick={() => setPresetTab('fake')}
+                    className={`px-2.5 py-0.5 rounded text-[10px] font-bold transition-colors ${
+                      presetTab === 'fake' ? 'bg-rose-500 text-white' : 'text-rose-400 hover:text-white'
+                    }`}
+                  >
+                    🚨 Fake & Phishing ({fakePresets.length})
+                  </button>
+                </div>
+              </div>
+
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                {PRESET_URLS.map((group, gIdx) => (
-                  <div key={gIdx} className="bg-navy-950/60 p-2.5 rounded-xl border border-navy-800">
-                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">
-                      {group.category}
+                {/* Real Links */}
+                {(presetTab === 'all' || presetTab === 'real') && (
+                  <div className="bg-navy-950/70 p-3 rounded-xl border border-emerald-500/30">
+                    <span className="text-[10px] font-bold text-emerald-300 uppercase tracking-wider block mb-2 flex items-center gap-1">
+                      <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                      <span>Real Authentic Websites (Offline Verified)</span>
                     </span>
                     <div className="flex flex-wrap gap-1.5">
-                      {group.items.map((item, i) => (
+                      {realPresets.map((item, i) => (
                         <button
                           key={i}
                           onClick={() => handleSelectPreset(item.url)}
-                          className="px-2.5 py-1 rounded-lg bg-navy-900 hover:bg-navy-800 text-[11px] text-cyan-300 hover:text-white border border-navy-700 transition-colors"
+                          className="px-2.5 py-1 rounded-lg bg-navy-900 hover:bg-emerald-950 text-[11px] text-emerald-300 hover:text-white border border-emerald-800/60 transition-colors"
+                          title={item.url}
                         >
                           {item.label}
                         </button>
                       ))}
                     </div>
                   </div>
-                ))}
+                )}
+
+                {/* Phishing Links */}
+                {(presetTab === 'all' || presetTab === 'fake') && (
+                  <div className="bg-navy-950/70 p-3 rounded-xl border border-rose-500/30">
+                    <span className="text-[10px] font-bold text-rose-300 uppercase tracking-wider block mb-2 flex items-center gap-1">
+                      <ShieldAlert className="w-3.5 h-3.5 text-rose-400" />
+                      <span>Known Deceptive / Phishing Lookalikes</span>
+                    </span>
+                    <div className="flex flex-wrap gap-1.5">
+                      {fakePresets.map((item, i) => (
+                        <button
+                          key={i}
+                          onClick={() => handleSelectPreset(item.url)}
+                          className="px-2.5 py-1 rounded-lg bg-navy-900 hover:bg-rose-950 text-[11px] text-rose-300 hover:text-white border border-rose-800/60 transition-colors"
+                          title={item.url}
+                        >
+                          {item.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -236,7 +279,7 @@ export const UrlTrustScannerModal: React.FC<UrlTrustScannerModalProps> = ({
                       </h3>
                       {result.detectedBrand && (
                         <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-navy-900 text-cyan-300 border border-navy-700">
-                          Target Brand: {result.detectedBrand}
+                          Brand: {result.detectedBrand} {result.brandCategory ? `(${result.brandCategory})` : ''}
                         </span>
                       )}
                     </div>
@@ -256,6 +299,58 @@ export const UrlTrustScannerModal: React.FC<UrlTrustScannerModalProps> = ({
                   </div>
                 </div>
               </div>
+
+              {/* REAL AUTHENTIC ALTERNATIVE SECTION (If Phishing or Fake) */}
+              {!result.isAuthenticBrandDomain && result.authenticAlternativeUrls && result.authenticAlternativeUrls.length > 0 && (
+                <div className="bg-emerald-950/30 border border-emerald-500/50 p-4 rounded-2xl space-y-2.5">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-emerald-300 flex items-center gap-1.5">
+                      <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                      <span>Real Official Websites for {result.detectedBrand} (Safe Alternatives):</span>
+                    </span>
+                    <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950 px-2 py-0.5 rounded border border-emerald-800">
+                      Offline Verified Link
+                    </span>
+                  </div>
+                  <div className="space-y-2">
+                    {result.authenticAlternativeUrls.map((alt, idx) => (
+                      <div key={idx} className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-2.5 bg-navy-950/90 rounded-xl border border-navy-800 text-xs">
+                        <div>
+                          <strong className="text-white block">{alt.label}</strong>
+                          <span className="font-mono text-emerald-300 text-[11px] block">{alt.url}</span>
+                          <span className="text-slate-400 text-[10px]">{alt.description}</span>
+                        </div>
+                        <button
+                          onClick={() => handleCopy(alt.url)}
+                          className="self-start sm:self-center flex items-center gap-1 px-3 py-1.5 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 font-bold text-xs transition-colors shrink-0"
+                        >
+                          {copiedLink === alt.url ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                          <span>{copiedLink === alt.url ? 'Copied Real Link!' : 'Copy Real Link'}</span>
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* REAL AUTHENTIC SITES DIRECTORY (If scanning a real verified site) */}
+              {result.isAuthenticBrandDomain && result.authenticAlternativeUrls && result.authenticAlternativeUrls.length > 0 && (
+                <div className="bg-navy-950 p-4 rounded-2xl border border-emerald-500/40 space-y-2">
+                  <span className="text-xs font-bold text-emerald-300 flex items-center gap-1.5">
+                    <Building className="w-4 h-4 text-emerald-400" />
+                    <span>Official Verified Portals for {result.detectedBrand}:</span>
+                  </span>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    {result.authenticAlternativeUrls.map((alt, idx) => (
+                      <div key={idx} className="p-2.5 bg-navy-900 rounded-xl border border-navy-800 text-xs">
+                        <strong className="text-white block">{alt.label}</strong>
+                        <span className="font-mono text-emerald-300 text-[11px] block break-all">{alt.url}</span>
+                        <span className="text-slate-400 text-[10px]">{alt.description}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               {/* URL Anatomy Dissector */}
               <div className="bg-navy-950 p-5 rounded-2xl border border-navy-800 space-y-3">
@@ -296,7 +391,11 @@ export const UrlTrustScannerModal: React.FC<UrlTrustScannerModalProps> = ({
 
                   {/* Root Domain */}
                   <div className="flex flex-col items-center">
-                    <span className="px-3 py-1 rounded text-xs font-black bg-cyan-500 text-navy-950 shadow-md shadow-cyan-500/20">
+                    <span className={`px-3 py-1 rounded text-xs font-black shadow-md ${
+                      result.isAuthenticBrandDomain 
+                        ? 'bg-emerald-500 text-navy-950 shadow-emerald-500/20' 
+                        : 'bg-cyan-500 text-navy-950 shadow-cyan-500/20'
+                    }`}>
                       {result.rootDomain}
                     </span>
                     <span className="text-[9px] text-cyan-300 font-bold mt-1 uppercase tracking-wider">
@@ -318,7 +417,7 @@ export const UrlTrustScannerModal: React.FC<UrlTrustScannerModalProps> = ({
                 </div>
 
                 <p className="text-[11px] text-slate-400 leading-relaxed">
-                  <strong className="text-slate-300">Golden Rule:</strong> In modern web browsers, the <strong>true destination</strong> is always the domain immediately before the final dot and extension (highlighted in cyan). Scammers often place trusted names like <code className="text-amber-300">apple.com</code> or <code className="text-amber-300">chase.com</code> in the <em>subdomain</em> to trick you.
+                  <strong className="text-slate-300">Golden Rule:</strong> In modern web browsers, the <strong>true destination</strong> is always the domain immediately before the final dot and extension (highlighted in cyan/emerald). Scammers often place trusted names like <code className="text-amber-300">chase.com</code> or <code className="text-amber-300">apple.com</code> in the <em>subdomain</em> to trick you.
                 </p>
               </div>
 
@@ -368,7 +467,10 @@ export const UrlTrustScannerModal: React.FC<UrlTrustScannerModalProps> = ({
 
         {/* Footer */}
         <div className="p-4 bg-navy-950 border-t border-navy-800 flex items-center justify-between text-xs text-slate-400">
-          <span>SafeSpace Hacks 2026 • 100% Client-Side Privacy-First URL Dissector</span>
+          <div className="flex items-center gap-1.5">
+            <Lock className="w-3.5 h-3.5 text-emerald-400" />
+            <span>SafeSpace Hacks 2026 • 100% Client-Side Offline Database</span>
+          </div>
           <button
             onClick={onClose}
             className="px-4 py-1.5 rounded-lg bg-navy-800 hover:bg-navy-700 text-white font-semibold transition-colors"

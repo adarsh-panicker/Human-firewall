@@ -58,13 +58,13 @@ async function run() {
     await page.waitForTimeout(400);
   }
 
-  console.log('4. Capturing AI Copilot Lab Modal...');
-  const aiLabBtn = page.locator('button:has-text("AI Lab")').first();
-  if (await aiLabBtn.isVisible()) {
-    await aiLabBtn.click();
+  console.log('4. Capturing Threat Lab Modal...');
+  const threatLabBtn = page.locator('button:has-text("Threat Lab")').first();
+  if (await threatLabBtn.isVisible()) {
+    await threatLabBtn.click();
     await page.waitForTimeout(600);
     // Run an analysis
-    const analyzeBtn = page.locator('button:has-text("Run AI Forensic Deconstruction")');
+    const analyzeBtn = page.locator('button:has-text("Run Forensic Threat Deconstruction")');
     if (await analyzeBtn.isVisible()) {
       await analyzeBtn.click();
       await page.waitForTimeout(800);

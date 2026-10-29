@@ -1,27 +1,5 @@
 import { Scenario, ScenarioAudience, SkillCategory } from '../types/game';
 
-const GEMINI_API_KEY_STORAGE = 'hf_gemini_api_key';
-
-export function getStoredGeminiKey(): string {
-  try {
-    return localStorage.getItem(GEMINI_API_KEY_STORAGE) || '';
-  } catch {
-    return '';
-  }
-}
-
-export function setStoredGeminiKey(key: string): void {
-  try {
-    if (key.trim()) {
-      localStorage.setItem(GEMINI_API_KEY_STORAGE, key.trim());
-    } else {
-      localStorage.removeItem(GEMINI_API_KEY_STORAGE);
-    }
-  } catch {
-    // Ignore storage errors
-  }
-}
-
 export interface ThreatAnalysisResult {
   threatLevel: 'Low' | 'Medium' | 'High' | 'Severe';
   scamType: string;
@@ -29,13 +7,13 @@ export interface ThreatAnalysisResult {
   identifiedRedFlags: string[];
   safeActionRecommendation: string;
   technicalExplanation: string;
-  isAiGenerated: boolean;
 }
 
 /**
- * Offline Heuristic Threat Analyzer (100% Client-Side, Zero Network, Zero API Key)
+ * 100% Offline Heuristic Threat Analyzer (Zero Network, Zero External API Keys)
+ * Fully compliant with SafeSpace Hacks 2026 rules.
  */
-function analyzeThreatOffline(text: string): ThreatAnalysisResult {
+export function analyzeThreat(text: string): ThreatAnalysisResult {
   const lower = text.toLowerCase();
   const redFlags: string[] = [];
   const triggers: string[] = [];
@@ -109,171 +87,23 @@ function analyzeThreatOffline(text: string): ThreatAnalysisResult {
     psychologicalTriggers: triggers.length > 0 ? triggers : ['Curiosity', 'Informal Social Engagement'],
     identifiedRedFlags: redFlags.length > 0 ? redFlags : ['Unverified sender identity', 'Unsolicited inbound communication'],
     safeActionRecommendation: 'Do not click links, do not reply to the message, and never authorize remote access or send funds. Independently verify by contacting the alleged organization using official public records.',
-    technicalExplanation: `The communication exhibits pattern match indicators characteristic of modern social engineering funnels. The attacker attempts to manipulate cognitive emotional biases before the victim can apply critical verification protocols.`,
-    isAiGenerated: false
+    technicalExplanation: `The communication exhibits pattern match indicators characteristic of modern social engineering funnels. The attacker attempts to manipulate cognitive emotional biases before the victim can apply critical verification protocols.`
   };
 }
 
 /**
- * Live Threat Analysis via Gemini API with graceful offline fallback
+ * 100% Offline Scenario Synthesis Engine
  */
-export async function analyzeThreat(content: string, customApiKey?: string): Promise<ThreatAnalysisResult> {
-  const apiKey = customApiKey || getStoredGeminiKey();
-
-  if (!apiKey) {
-    // Offline simulated engine (SafeSpace Hacks compliance)
-    return analyzeThreatOffline(content);
-  }
-
-  try {
-    const prompt = `You are a world-class cybersecurity forensic analyst for the game Human Firewall.
-Analyze this suspicious communication and return ONLY a valid raw JSON object (no markdown backticks, no markdown formatting):
-{
-  "threatLevel": "Low" | "Medium" | "High" | "Severe",
-  "scamType": string (e.g. "Bank Vishing", "Delivery Smishing", "Executive Impersonation"),
-  "psychologicalTriggers": ["string", "string"],
-  "identifiedRedFlags": ["string", "string"],
-  "safeActionRecommendation": "string",
-  "technicalExplanation": "string"
-}
-
-Suspicious text to analyze:
-"${content.slice(0, 1500)}"`;
-
-    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: { responseMimeType: 'application/json', temperature: 0.2 }
-      })
-    });
-
-    if (!res.ok) {
-      throw new Error(`Gemini API returned status ${res.status}`);
-    }
-
-    const data = await res.json();
-    const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-    const cleanJson = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
-    const parsed = JSON.parse(cleanJson);
-
-    return {
-      threatLevel: parsed.threatLevel || 'High',
-      scamType: parsed.scamType || 'Social Engineering Threat',
-      psychologicalTriggers: parsed.psychologicalTriggers || ['Panic', 'Urgency'],
-      identifiedRedFlags: parsed.identifiedRedFlags || ['Suspicious link', 'Unsolicited request'],
-      safeActionRecommendation: parsed.safeActionRecommendation || 'Do not click links or provide credentials.',
-      technicalExplanation: parsed.technicalExplanation || 'This communication exploits psychological cognitive biases.',
-      isAiGenerated: true
-    };
-  } catch (err) {
-    console.warn('Gemini live analysis failed, falling back to local heuristic analyzer:', err);
-    return analyzeThreatOffline(content);
-  }
-}
-
-/**
- * Generate a Playable Scenario (Live via Gemini or Offline via Synthesis Engine)
- */
-export async function generatePlayableScenario(
+export function generatePlayableScenario(
   topic: string, 
-  audience: ScenarioAudience = 'everyday',
-  customApiKey?: string
-): Promise<Scenario> {
-  const apiKey = customApiKey || getStoredGeminiKey();
-
-  if (apiKey) {
-    try {
-      const prompt = `You are an educational cybersecurity game designer for Human Firewall.
-Generate a high-fidelity playable scenario matching the topic: "${topic}" for audience "${audience}".
-Return ONLY a valid raw JSON object conforming to this schema (no backticks):
-{
-  "id": "sc-ai-${Date.now()}",
-  "title": "Short punchy title",
-  "category": "phishing" | "verification" | "authentication" | "privacy" | "incident" | "browsing",
-  "audience": "${audience}",
-  "difficulty": "intermediate",
-  "estimatedReadingSec": 20,
-  "narrative": "2-3 sentences placing the player in a realistic dilemma.",
-  "simulatedType": "sms" | "email" | "call" | "chat" | "browser" | "qr",
-  "simulatedData": {
-    "sender": "Simulated sender",
-    "content": "Simulated body",
-    "warning": "Key simulated detail"
-  },
-  "learningObjective": "Clear security objective",
-  "safetyTakeaway": "Practical defensive takeaway",
-  "forensicClues": [
-    { "id": "clue-1", "element": "Suspicious clue text", "description": "Why it's a red flag", "redFlagLevel": "critical" }
-  ],
-  "options": [
-    {
-      "id": "opt-safe",
-      "text": "The secure, cautious action",
-      "safety": "safer",
-      "score": 25,
-      "skillImpact": { "skill": "verification", "points": 25 },
-      "consequence": "Positive safety outcome",
-      "securityPrinciple": "Relevant security concept",
-      "saferExplanation": "Why this action protected you"
-    },
-    {
-      "id": "opt-critical",
-      "text": "The dangerous action falling for the lure",
-      "safety": "critical",
-      "score": -25,
-      "skillImpact": { "skill": "verification", "points": -25 },
-      "consequence": "Realistic cyber consequence",
-      "securityPrinciple": "Psychological exploit name",
-      "saferExplanation": "Why falling for this causes harm"
-    },
-    {
-      "id": "opt-risky",
-      "text": "Partially safe or reactive action",
-      "safety": "risky",
-      "score": 5,
-      "skillImpact": { "skill": "verification", "points": 0 },
-      "consequence": "Ambiguous outcome",
-      "securityPrinciple": "Incomplete verification",
-      "saferExplanation": "Why proactive out-of-band check is better"
-    }
-  ]
-}`;
-
-      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: { responseMimeType: 'application/json', temperature: 0.4 }
-        })
-      });
-
-      if (res.ok) {
-        const data = await res.json();
-        const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-        const cleanJson = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
-        const parsed = JSON.parse(cleanJson);
-        if (parsed.title && parsed.options && parsed.options.length >= 2) {
-          return {
-            ...parsed,
-            id: `sc-ai-${Date.now()}`
-          };
-        }
-      }
-    } catch (err) {
-      console.warn('Gemini scenario generation failed, using local synthesis template:', err);
-    }
-  }
-
-  // Offline Procedural Synthesis Engine
+  audience: ScenarioAudience = 'everyday'
+): Scenario {
   const safeTopic = topic.trim() || 'Suspicious Account Verification Alert';
   const category: SkillCategory = audience === 'everyday' ? 'verification' : 'phishing';
 
   return {
-    id: `sc-ai-offline-${Date.now()}`,
-    title: `AI Simulation: ${safeTopic.slice(0, 45)}`,
+    id: `sc-synth-offline-${Date.now()}`,
+    title: `Forensic Simulation: ${safeTopic.slice(0, 45)}`,
     category,
     audience,
     difficulty: 'intermediate',
@@ -289,13 +119,13 @@ Return ONLY a valid raw JSON object conforming to this schema (no backticks):
     safetyTakeaway: 'Never click verification links or share authorization codes based on inbound high-urgency notifications.',
     forensicClues: [
       {
-        id: 'clue-ai-urgency',
+        id: 'clue-synth-urgency',
         element: 'High urgency 15-minute deadline',
         description: 'Attackers create artificial time constraints to prevent you from researching or verifying.',
         redFlagLevel: 'critical'
       },
       {
-        id: 'clue-ai-domain',
+        id: 'clue-synth-domain',
         element: 'Domain: secure-verification-portal.online',
         description: 'Generic TLD (.online) registered recently to mimic authentic corporate sign-in portals.',
         redFlagLevel: 'critical'
@@ -303,7 +133,7 @@ Return ONLY a valid raw JSON object conforming to this schema (no backticks):
     ],
     options: [
       {
-        id: 'ai-opt-verify-independently',
+        id: 'synth-opt-verify-independently',
         text: 'Do not click the link. Log into the authentic official app or website directly from your saved bookmarks.',
         safety: 'safer',
         score: 25,
@@ -313,7 +143,7 @@ Return ONLY a valid raw JSON object conforming to this schema (no backticks):
         saferExplanation: 'Navigating independently through trusted bookmarks completely neutralizes phishing and credential harvesters.'
       },
       {
-        id: 'ai-opt-click-link',
+        id: 'synth-opt-click-link',
         text: 'Click the link and enter your credentials quickly to avoid having your account suspended.',
         safety: 'critical',
         score: -25,
@@ -323,7 +153,7 @@ Return ONLY a valid raw JSON object conforming to this schema (no backticks):
         saferExplanation: 'Phishing websites are designed to look identical to authentic brand portals to harvest credentials.'
       },
       {
-        id: 'ai-opt-reply-message',
+        id: 'synth-opt-reply-message',
         text: 'Reply to the alert asking: "Is this genuine? What information do you need?"',
         safety: 'risky',
         score: 5,
@@ -337,42 +167,12 @@ Return ONLY a valid raw JSON object conforming to this schema (no backticks):
 }
 
 /**
- * Ask Security Copilot (Live Q&A or Offline Knowledge Base)
+ * 100% Offline Cyber Mentor Knowledge Base
  */
-export async function askSecurityCopilot(
+export function askSecurityCopilot(
   question: string,
-  contextScenarioTitle?: string,
-  customApiKey?: string
-): Promise<string> {
-  const apiKey = customApiKey || getStoredGeminiKey();
-
-  if (apiKey) {
-    try {
-      const prompt = `You are the AI Cyber Defense Copilot in the game Human Firewall.
-Answer the user's cybersecurity question in 2-3 concise, educational, empowering paragraphs. Include practical rules of thumb.
-${contextScenarioTitle ? `Context Scenario: "${contextScenarioTitle}"` : ''}
-
-User Question: "${question}"`;
-
-      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: { temperature: 0.3, maxOutputTokens: 500 }
-        })
-      });
-
-      if (res.ok) {
-        const data = await res.json();
-        return data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-      }
-    } catch (err) {
-      console.warn('Gemini Q&A failed, falling back to local copilot KB:', err);
-    }
-  }
-
-  // Offline heuristic cybersecurity knowledge base
+  _contextScenarioTitle?: string
+): string {
   const q = question.toLowerCase();
 
   if (q.includes('voice') || q.includes('clone') || q.includes('bail') || q.includes('kidnap')) {
