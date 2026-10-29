@@ -3,12 +3,10 @@ import {
   BookOpen, 
   ArrowRight, 
   Filter, 
-  Clock, 
-  ShieldCheck, 
-  AlertTriangle 
+  Clock
 } from 'lucide-react';
 import { SCENARIOS } from '../data/scenarios';
-import { SkillCategory, DifficultyLevel, Scenario } from '../types/game';
+import { SkillCategory } from '../types/game';
 import { SKILL_LABELS, SKILL_COLORS } from '../engine/scoringEngine';
 import { soundManager } from '../utils/audio';
 
@@ -24,11 +22,9 @@ export const PracticeModePicker: React.FC<PracticeModePickerProps> = ({
   targetSkill
 }) => {
   const [selectedCategory, setSelectedCategory] = useState<string>(targetSkill || 'all');
-  const [selectedDifficulty, setSelectedDifficulty] = useState<string>('all');
 
   const filteredScenarios = SCENARIOS.filter(s => {
     if (selectedCategory !== 'all' && s.category !== selectedCategory) return false;
-    if (selectedDifficulty !== 'all' && s.difficulty !== selectedDifficulty) return false;
     return true;
   });
 

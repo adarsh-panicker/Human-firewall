@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  Award, 
   CheckCircle2, 
   AlertTriangle, 
-  TrendingUp, 
   RotateCcw, 
   BookOpen, 
   Printer, 
@@ -11,14 +9,12 @@ import {
   ShieldCheck, 
   ShieldAlert, 
   ChevronDown, 
-  ChevronUp,
-  Sparkles,
-  ExternalLink
+  ChevronUp
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { GameSession, SkillCategory } from '../types/game';
 import { generatePersonalizedReport } from '../engine/reportGenerator';
-import { calculateSessionScore, SKILL_LABELS, SKILL_COLORS } from '../engine/scoringEngine';
+import { calculateSessionScore, SKILL_LABELS } from '../engine/scoringEngine';
 import { soundManager } from '../utils/audio';
 
 interface ResultsReportProps {
@@ -195,7 +191,6 @@ export const ResultsReport: React.FC<ResultsReportProps> = ({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {(Object.keys(scoreReport.categoryScores) as SkillCategory[]).map((cat) => {
               const entry = scoreReport.categoryScores[cat];
-              const colors = SKILL_COLORS[cat];
               return (
                 <div key={cat} className="p-3.5 rounded-xl bg-navy-950/70 border border-navy-800 print-surface">
                   <div className="flex items-center justify-between text-xs mb-1.5">

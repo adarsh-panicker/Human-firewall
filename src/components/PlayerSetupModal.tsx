@@ -5,7 +5,6 @@ import {
   Briefcase, 
   Server, 
   Zap, 
-  Clock, 
   BookOpen, 
   X,
   ArrowRight,

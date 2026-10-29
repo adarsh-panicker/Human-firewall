@@ -6,9 +6,7 @@ import {
   GitBranch, 
   Lock, 
   Award, 
-  Sparkles, 
-  CheckCircle2, 
-  AlertTriangle 
+  Sparkles
 } from 'lucide-react';
 
 interface HowItWorksModalProps {

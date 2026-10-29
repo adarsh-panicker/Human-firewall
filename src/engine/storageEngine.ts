@@ -1,4 +1,4 @@
-import { StoredUserData, GameSession, UserProfile, SkillCategory, UserStats } from '../types/game';
+import { StoredUserData, GameSession, SkillCategory, UserStats } from '../types/game';
 import { INITIAL_ACHIEVEMENTS } from '../data/achievements';
 
 const STORAGE_KEY = 'human_firewall_v1_data';

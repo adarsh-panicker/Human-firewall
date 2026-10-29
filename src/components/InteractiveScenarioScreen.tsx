@@ -5,7 +5,6 @@ import {
   Play, 
   LogOut, 
   Shield, 
-  HelpCircle, 
   Lightbulb,
   Sparkles
 } from 'lucide-react';
@@ -54,7 +53,7 @@ export const InteractiveScenarioScreen: React.FC<InteractiveScenarioScreenProps>
   const [selectedOption, setSelectedOption] = useState<DecisionOption | null>(null);
   const [showExitConfirm, setShowExitConfirm] = useState<boolean>(false);
 
-  const startTimeRef = useRef<number>(Date.now());
+  const startTimeRef = useRef<number>(0);
   const timerRef = useRef<any>(null);
 
   // Reset state when scenario changes

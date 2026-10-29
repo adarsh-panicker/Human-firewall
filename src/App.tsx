@@ -43,29 +43,19 @@ export const App: React.FC = () => {
 
   // Active game session state
   const [currentSession, setCurrentSession] = useState<GameSession | null>(() => userData.activeSession);
-  const [activeScenario, setActiveScenario] = useState<Scenario | null>(null);
   const [isBranchingNext, setIsBranchingNext] = useState<boolean>(false);
   const [branchTitle, setBranchTitle] = useState<string | undefined>(undefined);
   const [adaptiveNote, setAdaptiveNote] = useState<string | undefined>(undefined);
+
+  // Derive active scenario directly from currentSession state
+  const activeScenario: Scenario | null = (currentSession && !currentSession.completed)
+    ? SCENARIO_MAP.get(currentSession.scenarioQueue[currentSession.currentScenarioIndex]) || SCENARIOS[0]
+    : null;
 
   // Synchronize audio preference
   useEffect(() => {
     soundManager.setEnabled(userData.preferences.soundEffects);
   }, [userData.preferences.soundEffects]);
-
-  // Synchronize active scenario with current session index
-  useEffect(() => {
-    if (currentSession && !currentSession.completed) {
-      const scenarioId = currentSession.scenarioQueue[currentSession.currentScenarioIndex];
-      const found = SCENARIO_MAP.get(scenarioId);
-      if (found) {
-        setActiveScenario(found);
-      } else {
-        // Fallback gracefully to first scenario if ID missing
-        setActiveScenario(SCENARIOS[0]);
-      }
-    }
-  }, [currentSession]);
 
   // Save changes to localStorage
   const updateUserDataAndSave = useCallback((updater: (prev: StoredUserData) => StoredUserData) => {

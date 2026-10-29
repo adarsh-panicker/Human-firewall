@@ -1,5 +1,5 @@
-import { PlayerDecision, Scenario, SkillCategory, UserProfile } from '../types/game';
-import { SCENARIO_MAP, SCENARIOS } from '../data/scenarios';
+import { PlayerDecision, SkillCategory, UserProfile } from '../types/game';
+import { SCENARIOS } from '../data/scenarios';
 
 export interface AdaptiveRecommendation {
   nextScenarioId: string;

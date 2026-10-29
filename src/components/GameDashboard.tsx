@@ -5,16 +5,11 @@ import {
   ShieldCheck, 
   BookOpen, 
   Award, 
-  TrendingUp, 
-  RotateCcw, 
   Download, 
   RefreshCw, 
   CheckCircle2, 
   AlertTriangle, 
   ChevronRight,
-  Shield,
-  Clock,
-  Sparkles,
   Lock
 } from 'lucide-react';
 import { StoredUserData, GameMode, GameSession, SkillCategory } from '../types/game';

@@ -1,16 +1,11 @@
 import React from 'react';
 import { 
-  ShieldAlert, 
   Mail, 
   QrCode, 
   PhoneCall, 
   HardDrive, 
   Wifi, 
-  Lock, 
-  Briefcase, 
   AlertOctagon, 
-  Send,
-  ExternalLink,
   Info
 } from 'lucide-react';
 import { Scenario } from '../types/game';
