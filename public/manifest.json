@@ -1,0 +1,16 @@
+{
+  "name": "Human Firewall — The 60-Second Decision Game",
+  "short_name": "Human Firewall",
+  "description": "Real-world security decisions. Instant consequences. Better digital habits.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#070C18",
+  "theme_color": "#0B132B",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml"
+    }
+  ]
+}
