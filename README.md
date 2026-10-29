@@ -3,7 +3,6 @@
 > **Tagline:** *Every click is a choice. Every choice teaches you something.*  
 > **Created & Developed By:** **Adarsh Panicker**  
 > **Event Submission:** **SafeSpace Hacks 2026**  
-> **Live Local URL:** `http://localhost:5173/`  
 > **Core Stack:** React 19, TypeScript, Vite, Tailwind CSS, Lucide Icons, Canvas-Confetti, Web Speech & Web Audio APIs, PWA Service Worker
 
 ---
