@@ -30,6 +30,7 @@ interface GameDashboardProps {
   onExportJson: () => void;
   onResetProgress: () => void;
   onOpenSetup: () => void;
+  onOpenAiCopilot?: () => void;
 }
 
 export const GameDashboard: React.FC<GameDashboardProps> = ({
@@ -41,7 +42,8 @@ export const GameDashboard: React.FC<GameDashboardProps> = ({
   onViewSessionReport,
   onExportJson,
   onResetProgress,
-  onOpenSetup
+  onOpenSetup,
+  onOpenAiCopilot
 }) => {
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [showSandbox, setShowSandbox] = useState(false);
@@ -79,12 +81,25 @@ export const GameDashboard: React.FC<GameDashboardProps> = ({
           </div>
 
           <div className="flex flex-wrap items-center gap-2.5">
+            {onOpenAiCopilot && (
+              <button
+                onClick={() => {
+                  soundManager.playClick();
+                  onOpenAiCopilot();
+                }}
+                className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-r from-teal-500/20 to-cyan-500/20 hover:from-teal-500/30 hover:to-cyan-500/30 border border-cyan-500/50 text-cyan-300 text-xs font-bold transition-all shadow-md shadow-cyan-500/10"
+                title="Launch the AI Cyber Copilot & Threat Forensic Lab"
+              >
+                <Zap className="w-3.5 h-3.5 text-cyan-400" />
+                <span>AI Forensic Lab</span>
+              </button>
+            )}
             <button
               onClick={() => {
                 soundManager.playClick();
                 setShowSandbox(true);
               }}
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-cyan-500/15 hover:bg-cyan-500/25 border border-cyan-500/40 text-cyan-300 text-xs font-semibold transition-colors"
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-navy-800 hover:bg-navy-700 border border-navy-700 text-slate-300 hover:text-white text-xs font-semibold transition-colors"
               title="Launch the Domain & URL Threat Sandbox Analyzer"
             >
               <Terminal className="w-3.5 h-3.5 text-cyan-400" />

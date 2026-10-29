@@ -31,6 +31,7 @@ import { ResultsReport } from './components/ResultsReport';
 import { PracticeModePicker } from './components/PracticeModePicker';
 import { HowItWorksModal } from './components/HowItWorksModal';
 import { ThreatSandboxModal } from './components/ThreatSandboxModal';
+import { AiSecurityCopilotModal } from './components/AiSecurityCopilotModal';
 import { soundManager } from './utils/audio';
 
 type ActiveView = 'welcome' | 'dashboard' | 'game' | 'results' | 'practice';
@@ -41,6 +42,7 @@ export const App: React.FC = () => {
   const [isSetupOpen, setIsSetupOpen] = useState<boolean>(false);
   const [isHowItWorksOpen, setIsHowItWorksOpen] = useState<boolean>(false);
   const [isThreatSandboxOpen, setIsThreatSandboxOpen] = useState<boolean>(false);
+  const [isAiCopilotOpen, setIsAiCopilotOpen] = useState<boolean>(false);
   const [targetPracticeSkill, setTargetPracticeSkill] = useState<SkillCategory | null>(null);
 
   // Active game session state
@@ -113,6 +115,13 @@ export const App: React.FC = () => {
         ? 'sc-fake-job-1' 
         : 'sc-mfa-1';
     startNewGameSession(userData.profile, userData.displayName, 'demo', [demoId]);
+  }, [userData.profile, userData.displayName, startNewGameSession]);
+
+  // Launch a dynamically generated AI scenario immediately
+  const handlePlayCustomScenario = useCallback((scenario: Scenario) => {
+    soundManager.playClick();
+    SCENARIO_MAP.set(scenario.id, scenario);
+    startNewGameSession(userData.profile, userData.displayName, 'practice', [scenario.id]);
   }, [userData.profile, userData.displayName, startNewGameSession]);
 
   // Handle player making a decision on the interactive scenario screen
@@ -309,6 +318,10 @@ export const App: React.FC = () => {
           soundManager.playClick();
           setIsThreatSandboxOpen(true);
         }}
+        onOpenAiCopilot={() => {
+          soundManager.playClick();
+          setIsAiCopilotOpen(true);
+        }}
         soundEnabled={userData.preferences.soundEffects}
         onToggleSound={handleToggleSound}
         userProfile={userData.profile}
@@ -357,6 +370,7 @@ export const App: React.FC = () => {
             onExportJson={handleExportData}
             onResetProgress={handleResetData}
             onOpenSetup={() => setIsSetupOpen(true)}
+            onOpenAiCopilot={() => setIsAiCopilotOpen(true)}
           />
         )}
 
@@ -426,6 +440,14 @@ export const App: React.FC = () => {
       <ThreatSandboxModal
         isOpen={isThreatSandboxOpen}
         onClose={() => setIsThreatSandboxOpen(false)}
+      />
+
+      {/* AI Security Copilot & Forensic Lab Modal */}
+      <AiSecurityCopilotModal
+        isOpen={isAiCopilotOpen}
+        onClose={() => setIsAiCopilotOpen(false)}
+        onPlayCustomScenario={handlePlayCustomScenario}
+        currentScenarioTitle={activeScenario?.title}
       />
     </div>
   );

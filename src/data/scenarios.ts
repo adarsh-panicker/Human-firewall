@@ -1554,6 +1554,336 @@ export const SCENARIOS: Scenario[] = [
         saferExplanation: 'Replying keeps you engaged in the scammer\'s psychological funnel. Escalate only via vetted internal channels.'
       }
     ]
+  },
+
+  // EVERYDAY 8: AI Voice Clone / Grandparent Emergency Bail Scam
+  {
+    id: 'sc-home-voice-clone-1',
+    title: 'The Distressed Family Voice Call',
+    category: 'verification',
+    audience: 'everyday',
+    difficulty: 'advanced',
+    estimatedReadingSec: 25,
+    narrative: 'Your phone rings from an unknown local area code. When you answer, you hear what sounds exactly like your 20-year-old nephew Leo sobbing: "Uncle, I messed up! I got into a car accident and the police arrested me. I need $2,500 for bail right now or I\'ll be put in county jail over the weekend! Please talk to Officer Miller, don\'t tell mom yet!" A stern man claiming to be the precinct bond officer takes the phone.',
+    simulatedType: 'call',
+    simulatedData: {
+      callerName: 'Leo (Sounds Identical) & Officer Miller',
+      callerNumber: '+1 (555) 492-8812',
+      badgeNumber: 'Shield #4912',
+      urgentDemand: '$2,500 via Bitcoin ATM or wire transfer within 45 mins'
+    },
+    learningObjective: 'Recognize generative AI voice cloning used in emergency kidnapping/bail social engineering scams.',
+    safetyTakeaway: 'Criminals clone voices using 3-second audio clips from TikTok or Instagram. Always establish a family emergency safe-word or hang up and call the real family member directly.',
+    forensicClues: [
+      {
+        id: 'clue-voice-urgency',
+        element: 'Secrecy & Panic Demand: "Don\'t tell my mom yet!"',
+        description: 'Scammers deliberately forbid you from calling other family members so you cannot verify the story.',
+        redFlagLevel: 'critical'
+      },
+      {
+        id: 'clue-payment-bail',
+        element: 'Payment via Bitcoin ATM or gift cards',
+        description: 'Real police departments and municipal courts NEVER accept bail payments via Bitcoin, cryptocurrency, or gift cards.',
+        redFlagLevel: 'critical'
+      }
+    ],
+    profileFlavor: {
+      everyday: 'AI voice models can replicate your child\'s or sibling\'s voice with astonishing realism using brief social media audio clips.'
+    },
+    options: [
+      {
+        id: 'voice-opt-hangup-call',
+        text: 'Hang up immediately. Call Leo directly on his personal saved cell phone, or call his parents to verify his whereabouts.',
+        safety: 'safer',
+        score: 25,
+        skillImpact: { skill: 'verification', points: 25 },
+        consequence: 'Leo answers on his cell phone from his college library, completely fine and never in any accident. You thwarted an AI voice cloning extortion scam.',
+        securityPrinciple: 'Out-of-Band Family Verification Protocol',
+        saferExplanation: 'Always hang up and call the family member back directly on their trusted number, or ask for a pre-established family safety word.'
+      },
+      {
+        id: 'voice-opt-rush-atm',
+        text: 'Rush to the nearest cryptocurrency ATM and deposit the $2,500 to protect your nephew from going to county jail.',
+        safety: 'critical',
+        score: -25,
+        skillImpact: { skill: 'verification', points: -25 },
+        consequence: 'The money is instantly transferred to a criminal syndicate in another country and cannot be recovered.',
+        securityPrinciple: 'Irreversible Cryptocurrency Bail Extortion',
+        saferExplanation: 'Government agencies and legal courts never demand payment via cryptocurrency, gift cards, or money transfer apps.'
+      },
+      {
+        id: 'voice-opt-ask-questions',
+        text: 'Stay on the phone and ask the officer which precinct they are at and negotiate paying with your credit card.',
+        safety: 'risky',
+        score: 5,
+        skillImpact: { skill: 'verification', points: 0 },
+        consequence: 'The scammer yells and threatens immediate criminal charges to overwhelm your critical thinking.',
+        securityPrinciple: 'High-Stress Emotional Funnel Resistance',
+        saferExplanation: 'Do not debate or negotiate with phone scammers. Disconnecting is the only way to break the psychological panic cycle.'
+      }
+    ]
+  },
+
+  // EVERYDAY 9: Electric Utility Immediate Shutoff Ultimatum
+  {
+    id: 'sc-home-utility-shutoff-1',
+    title: 'The 45-Minute Power Disconnect Threat',
+    category: 'verification',
+    audience: 'everyday',
+    difficulty: 'beginner',
+    estimatedReadingSec: 20,
+    narrative: 'It is a scorching hot Friday afternoon. You receive an automated robotic call followed by an SMS from "National Grid Power Services": "NOTICE: Past-due electric meter balance of $184.20. Service disconnection technician dispatched. Power will be terminated in 45 minutes unless paid immediately. Press 1 to connect to billing resolution."',
+    simulatedType: 'sms',
+    simulatedData: {
+      smsSender: 'POWER-ALERT (888-512-9901)',
+      smsBody: 'URGENT: Electric meter disconnected in 45 mins due to unpaid $184.20. Pay via Zelle or Vanilla Visa barcode to prevent shutoff: https://utility-emergency-pay.online/meter',
+      carrierWarning: 'Unverified Sender'
+    },
+    learningObjective: 'Identify aggressive utility disconnection scams exploiting weather/timing panic.',
+    safetyTakeaway: 'Utility companies send multiple written mail notices over weeks before disconnecting service and never require Zelle or prepaid cards.',
+    forensicClues: [
+      {
+        id: 'clue-utility-friday',
+        element: 'Friday afternoon shutoff threat',
+        description: 'Utility regulations in almost all jurisdictions prohibit cutting power on Friday afternoons or weekends.',
+        redFlagLevel: 'moderate'
+      },
+      {
+        id: 'clue-utility-domain',
+        element: 'Domain: utility-emergency-pay.online',
+        description: 'Notice the .online generic top-level domain instead of the official utility company domain.',
+        redFlagLevel: 'critical'
+      }
+    ],
+    options: [
+      {
+        id: 'utility-opt-official-login',
+        text: 'Do not click the link or call the number. Open your browser, go to your official utility portal (or app), and check your account balance.',
+        safety: 'safer',
+        score: 25,
+        skillImpact: { skill: 'verification', points: 25 },
+        consequence: 'Your official utility account shows a $0.00 past-due balance with Auto-Pay active. You avoided an aggressive impersonation scam.',
+        securityPrinciple: 'Primary Source Account Verification',
+        saferExplanation: 'Never rely on contact info inside urgent inbound warnings. Log in via your saved bookmark or check your actual paper bill.'
+      },
+      {
+        id: 'utility-opt-pay-zelle',
+        text: 'Quickly click the SMS link and send $184.20 via Zelle so your refrigerator and air conditioning don\'t lose power over the weekend.',
+        safety: 'critical',
+        score: -25,
+        skillImpact: { skill: 'verification', points: -25 },
+        consequence: 'The scammer steals your $184.20. Your bank denies fraud reimbursement because you voluntarily authorized the transfer.',
+        securityPrinciple: 'Artificial Urgency Overriding Sanity Checks',
+        saferExplanation: 'Scammers pick extreme weather days and Friday evenings because the fear of having power cut off causes people to bypass logic.'
+      },
+      {
+        id: 'utility-opt-call-sms-back',
+        text: 'Call the 888 number provided in the SMS to ask the representative why your automatic bill payment didn\'t go through.',
+        safety: 'risky',
+        score: 5,
+        skillImpact: { skill: 'verification', points: 0 },
+        consequence: 'The scam call center agent answers with professional music and convincingly instructs you on how to pay.',
+        securityPrinciple: 'Inbound Scam Call Center Traps',
+        saferExplanation: 'The phone number in the SMS connects straight to the scam call center. Never call back numbers sent in suspicious alerts.'
+      }
+    ]
+  },
+
+  // EVERYDAY 10: Geek Squad / Norton $499.99 Auto-Renewal Refund Scam
+  {
+    id: 'sc-home-geek-squad-1',
+    title: 'The "$499.99 Auto-Renewal" Subscription Notice',
+    category: 'phishing',
+    audience: 'everyday',
+    difficulty: 'intermediate',
+    estimatedReadingSec: 25,
+    narrative: 'You check your personal email and see an invoice titled "INVOICE #GS-88219 - Best Buy Geek Squad Total Tech Care Auto-Renewal Successful". The email includes an attached PDF stating that $499.99 has been automatically debited from your checking account. At the bottom: "If you did not authorize this charge or wish to cancel and request a full refund, please call our 24/7 billing resolution line immediately at +1 (800) 555-0199."',
+    simulatedType: 'email',
+    simulatedData: {
+      emailFrom: 'BestBuy Customer Billing <billing.renewals@geeksquad-customer-invoices.com>',
+      emailSubject: 'Receipt for order #GS-88219: $499.99 Debited',
+      senderReputation: 'External / Unverified SPF',
+      badge: 'Attached: Invoice_GS88219.pdf'
+    },
+    learningObjective: 'Recognize invoice/refund scams designed to get victims on the phone to install remote desktop malware.',
+    safetyTakeaway: 'Fake renewal invoices are bait to make you panic about losing $500 so you call the phone number, where they manipulate you into granting remote access to your computer.',
+    forensicClues: [
+      {
+        id: 'clue-geek-domain',
+        element: 'From: geeksquad-customer-invoices.com',
+        description: 'Best Buy uses bestbuy.com. This long hyphenated domain was registered 3 days ago.',
+        redFlagLevel: 'critical'
+      },
+      {
+        id: 'clue-geek-phone-trap',
+        element: '"Call 1-800 to cancel and refund"',
+        description: 'Real companies provide a web portal to manage subscriptions. Scammers demand you call so they can talk you through downloading AnyDesk/TeamViewer.',
+        redFlagLevel: 'critical'
+      }
+    ],
+    options: [
+      {
+        id: 'geek-opt-check-bank',
+        text: 'Do not call the phone number. Log in directly to your actual bank account to see if $499.99 was charged, and mark the email as phishing.',
+        safety: 'safer',
+        score: 25,
+        skillImpact: { skill: 'phishing', points: 25 },
+        consequence: 'Your bank account shows no such transaction ever occurred. The email was 100% fake bait to get you on the phone.',
+        securityPrinciple: 'Financial Reality Check Over Phishing Bait',
+        saferExplanation: 'Before panicking over an unexpected invoice, check your real banking transactions independently.'
+      },
+      {
+        id: 'geek-opt-call-refund',
+        text: 'Call the 1-800 number immediately to speak with the billing department and demand a refund for the unauthorized $499 charge.',
+        safety: 'critical',
+        score: -25,
+        skillImpact: { skill: 'phishing', points: -25 },
+        consequence: 'The scammer asks you to download "screen-sharing software" to process the refund, then blacks out your screen and drains your bank balance.',
+        securityPrinciple: 'Remote Access Trojan (RAT) Refund Funnel',
+        saferExplanation: 'Calling the number is the trap: scammers use remote desktop software to manipulate web page code and steal savings.'
+      },
+      {
+        id: 'geek-opt-reply-email',
+        text: 'Reply to the email with: "CANCEL THIS IMMEDIATELY! I NEVER SUBSCRIBED TO GEEK SQUAD!"',
+        safety: 'risky',
+        score: 5,
+        skillImpact: { skill: 'phishing', points: 0 },
+        consequence: 'Replying confirms your email is active and monitored, causing you to be targeted by 10x more refund phishing campaigns.',
+        securityPrinciple: 'Active Inbox Confirmation Risk',
+        saferExplanation: 'Never reply to spammers or scammers. It signals that a live human is reading the inbox.'
+      }
+    ]
+  },
+
+  // EVERYDAY 11: The "Wrong Number" Friendly Text (Pig Butchering / Crypto)
+  {
+    id: 'sc-home-wrong-number-1',
+    title: 'The "Wrong Number" Casual Text Message',
+    category: 'privacy',
+    audience: 'everyday',
+    difficulty: 'intermediate',
+    estimatedReadingSec: 20,
+    narrative: 'You receive a text on your personal phone: "Hi David, are we still meeting at the tennis club at 4pm? My driver said traffic is light." You reply: "Sorry, wrong number, I\'m not David." Within 30 seconds, they text back: "Oh I am so embarrassed! My assistant must have typed the number wrong. You seem very polite though! I\'m Chloe, from Vancouver. Have a wonderful day 😊". An hour later, they send a photo of a gourmet coffee and ask how your day is going.',
+    simulatedType: 'sms',
+    simulatedData: {
+      smsSender: '+1 (778) 901-4419 (Chloe)',
+      smsBody: 'Oh I am so embarrassed! You seem very kind though 😊. I\'m Chloe. Where are you from? Maybe fate wanted us to be friends!',
+      profilePic: 'Attractive professional photo'
+    },
+    learningObjective: 'Identify the early stages of "Pig Butchering" (Sha Zhu Pan) long-con relationship and fake crypto investment scams.',
+    safetyTakeaway: '"Accidental wrong number" texts are scripted conversation starters by organized criminal syndicates to build trust over days or weeks before pitching a fraudulent crypto platform.',
+    forensicClues: [
+      {
+        id: 'clue-wrong-num-flattery',
+        element: 'Flattery & continuing conversation after mistake acknowledged',
+        description: 'Normal people apologize and stop texting. Scammers intentionally pivot to friendly rapport to hook victims.',
+        redFlagLevel: 'critical'
+      },
+      {
+        id: 'clue-wrong-num-script',
+        element: 'Wealth signals (driver, tennis club, luxury coffee)',
+        description: 'Scammers project an image of effortless wealth so victims later ask them how they make so much money.',
+        redFlagLevel: 'moderate'
+      }
+    ],
+    options: [
+      {
+        id: 'wrong-opt-block-report',
+        text: 'Do not respond any further. Block the number immediately and report it as junk/spam in your phone settings.',
+        safety: 'safer',
+        score: 25,
+        skillImpact: { skill: 'privacy', points: 25 },
+        consequence: 'You severed contact before the psychological grooming process started. You avoided an elaborate crypto investment trap.',
+        securityPrinciple: 'Pig Butchering Cold Contact Disruption',
+        saferExplanation: 'Never engage with strangers who continue chatting after a "wrong number". It is a mass-market organized crime playbook.'
+      },
+      {
+        id: 'wrong-opt-keep-chatting',
+        text: 'Reply politely and chat with Chloe about your day and hobbies since she seems friendly and harmless.',
+        safety: 'critical',
+        score: -25,
+        skillImpact: { skill: 'privacy', points: -25 },
+        consequence: 'Over the next 2 weeks, "Chloe" builds an online friendship, then guides you into depositing money into a rigged crypto trading app where your funds are stolen.',
+        securityPrinciple: 'Emotional Social Engineering Grooming',
+        saferExplanation: 'Romance and friendship scams rely on weeks of rapport before the financial ask ever appears.'
+      },
+      {
+        id: 'wrong-opt-reverse-image',
+        text: 'Do a reverse image search on her photo and message her back calling her a scammer.',
+        safety: 'risky',
+        score: 10,
+        skillImpact: { skill: 'privacy', points: 5 },
+        consequence: 'You recognized the scam, but replying signals your phone number is active and interactive.',
+        securityPrinciple: 'Silent Disengagement vs Confrontation',
+        saferExplanation: 'Never confront scammers. Silent blocking is safest because confrontation provides feedback to refine their scripts.'
+      }
+    ]
+  },
+
+  // EVERYDAY 12: Smart TV & Streaming Device Malicious Sideload
+  {
+    id: 'sc-home-smart-tv-1',
+    title: 'The Smart TV "Free Movies 4K" Sideload Alert',
+    category: 'browsing',
+    audience: 'everyday',
+    difficulty: 'intermediate',
+    estimatedReadingSec: 25,
+    narrative: 'While watching your smart TV in the living room, a family member opens the TV web browser looking for a free sports stream. A webpage titled "CinemaStream HD" prompts: "To view this high-definition live stream on your Android TV, download the CinemaStream.apk player." When clicked, the TV displays a system security warning: "Install unknown apps: Allow browser to install applications from unverified sources? Also granting Accessibility Service controls."',
+    simulatedType: 'browser',
+    simulatedData: {
+      siteUrl: 'http://cinemastream-hd-free.apk-mirror.cc/download',
+      tvWarning: 'SYSTEM ALERT: Installing unknown APK allows full background device access.',
+      requestedPermissions: 'Microphone, Local Network Discovery, Accessibility Services'
+    },
+    learningObjective: 'Understand the risks of sideloading untrusted apps and granting accessibility permissions on smart home TVs.',
+    safetyTakeaway: 'Malicious TV apps turn streaming devices into residential proxy botnets that spy on home network traffic and record audio.',
+    forensicClues: [
+      {
+        id: 'clue-tv-accessibility',
+        element: 'Requested: Accessibility Services & Local Network Discovery',
+        description: 'A video player NEVER needs accessibility services or network scanning. Malware uses this to silently click buttons and scan other home laptops.',
+        redFlagLevel: 'critical'
+      },
+      {
+        id: 'clue-tv-apk',
+        element: 'Downloading .apk outside official App Store / Google Play',
+        description: 'Bypassing official app store security verification puts every device on your home Wi-Fi at risk.',
+        redFlagLevel: 'critical'
+      }
+    ],
+    options: [
+      {
+        id: 'tv-opt-cancel-close',
+        text: 'Immediately deny the permission, cancel the APK installation, and close the browser on the TV.',
+        safety: 'safer',
+        score: 25,
+        skillImpact: { skill: 'browsing', points: 25 },
+        consequence: 'Your smart TV and home Wi-Fi network remain secure. The unvetted application is prevented from installing.',
+        securityPrinciple: 'Untrusted Sideloading & Privilege Isolation',
+        saferExplanation: 'Only install streaming apps from the official TV app store (Google Play, Roku Channel Store, Apple TV Store).'
+      },
+      {
+        id: 'tv-opt-allow-all',
+        text: 'Click "Allow and Enable Accessibility" so the family can watch the free live sports stream without paying.',
+        safety: 'critical',
+        score: -25,
+        skillImpact: { skill: 'browsing', points: -25 },
+        consequence: 'The malicious APK turns your smart TV into an unwitting botnet proxy node, snooping on devices connected to your home Wi-Fi.',
+        securityPrinciple: 'Malicious IoT Botnet Enlistment',
+        saferExplanation: 'Smart TVs share your home network with your laptops, phones, and personal files. Compromising the TV exposes the entire household.'
+      },
+      {
+        id: 'tv-opt-allow-no-access',
+        text: 'Allow the installation but decline only the microphone permission.',
+        safety: 'risky',
+        score: -10,
+        skillImpact: { skill: 'browsing', points: -10 },
+        consequence: 'Even without microphone access, the sideloaded app runs background network packet sniffing on your home network.',
+        securityPrinciple: 'Partial Permission Fallacy',
+        saferExplanation: 'An untrusted executable binary is already compromised. Restricting one minor permission does not mitigate malware.'
+      }
+    ]
   }
 ];
 

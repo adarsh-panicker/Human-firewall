@@ -8,6 +8,7 @@ interface NavbarProps {
   onLaunchDemo: () => void;
   onOpenHowItWorks: () => void;
   onOpenThreatSandbox: () => void;
+  onOpenAiCopilot: () => void;
   soundEnabled: boolean;
   onToggleSound: () => void;
   userProfile: UserProfile;
@@ -27,6 +28,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onLaunchDemo,
   onOpenHowItWorks,
   onOpenThreatSandbox,
+  onOpenAiCopilot,
   soundEnabled,
   onToggleSound,
   userProfile,
@@ -72,6 +74,15 @@ export const Navbar: React.FC<NavbarProps> = ({
               <span>Demo Scenario</span>
             </button>
           )}
+
+          <button
+            onClick={onOpenAiCopilot}
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-gradient-to-r from-teal-500/15 to-cyan-500/15 border border-cyan-500/40 text-cyan-300 hover:bg-cyan-500/25 transition-all shadow-sm"
+            title="Launch the AI Cyber Copilot & Forensic Threat Deconstruction Lab"
+          >
+            <Zap className="w-3.5 h-3.5 text-cyan-400" />
+            <span>AI Lab</span>
+          </button>
 
           <button
             onClick={onOpenThreatSandbox}
