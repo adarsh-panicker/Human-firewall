@@ -57,7 +57,7 @@ export const Footer: React.FC<FooterProps> = ({
         </div>
       </div>
       <div className="max-w-7xl mx-auto mt-4 pt-3 border-t border-navy-900 flex flex-col sm:flex-row justify-between items-center text-[11px] text-slate-400 gap-2">
-        <span>SafeSpace Hacks 2026 Submission • Human Firewall: The 60-Second Decision Game</span>
+        <span>SafeSpace Hacks 2026 • Human Firewall: The 60-Second Decision Game • Built by <strong className="text-cyan-300 font-semibold">Adarsh Panicker</strong></span>
         <span>Every click is a choice. Every choice teaches you something.</span>
       </div>
     </footer>

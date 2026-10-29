@@ -106,7 +106,8 @@ export const ClearanceCertificateModal: React.FC<ClearanceCertificateModalProps>
 
           {/* Footer of certificate */}
           <div className="flex flex-col sm:flex-row items-center justify-between text-[11px] text-slate-400 pt-3 border-t border-navy-800/80 font-mono gap-2">
-            <span>Date Issued: {certDate}</span>
+            <span>Date: {certDate}</span>
+            <span className="text-slate-300">Verified by: <strong className="text-cyan-300">Adarsh Panicker</strong></span>
             <span className="flex items-center gap-1 text-slate-300">
               <Lock className="w-3 h-3 text-cyan-400" />
               <span>Verify: {certHash}</span>

@@ -1,7 +1,9 @@
 {
   "name": "human-firewall",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "Human Firewall — The 60-Second Decision Game. Submission for SafeSpace Hacks 2026 by Adarsh Panicker.",
+  "author": "Adarsh Panicker",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -24,6 +26,7 @@
     "@vitejs/plugin-react": "^6.1.2",
     "autoprefixer": "^10.6.2",
     "oxlint": "^1.89.0",
+    "playwright-core": "^1.64.1",
     "postcss": "^8.5.32",
     "tailwindcss": "^3.4.19",
     "typescript": "~7.0.2",

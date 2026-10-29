@@ -1,181 +1,265 @@
 # Human Firewall — The 60-Second Decision Game
 
-> **Tagline:** Every click is a choice. Every choice teaches you something.  
-> **Event:** Submission for SafeSpace Hacks 2026  
-> **Tech Stack:** React 19, TypeScript, Vite, Tailwind CSS, Lucide Icons, Canvas-Confetti, Web Audio API, PWA Service Worker
+> **Tagline:** *Every click is a choice. Every choice teaches you something.*  
+> **Created & Developed By:** **Adarsh Panicker**  
+> **Event Submission:** **SafeSpace Hacks 2026**  
+> **Live Local URL:** `http://localhost:5173/`  
+> **Core Stack:** React 19, TypeScript, Vite, Tailwind CSS, Lucide Icons, Canvas-Confetti, Web Speech & Web Audio APIs, PWA Service Worker
 
 ---
 
-## 1. Project Overview & Mission
+## 📸 Visual Showcase & Screenshots
 
-Most cybersecurity training consists of annual slide decks and multiple-choice quizzes that people quickly click through. Real-world social engineering attacks, however, target hurried, distracted humans under high emotional urgency.
+### 1. Welcome Screen & Interactive 5-Second Teaser
+*Hero experience with zero setup required, instant 60-second challenge launcher, and live simulated notification teaser.*  
+![Welcome Screen](./screenshots/01_welcome_screen.png)
 
-**Human Firewall** is a fast-paced, interactive cyber-defense game that places players directly inside authentic, simulated security dilemmas:
-- Unexpected Multi-Factor Authentication (MFA) fatigue pushes
-- Lookalike vendor invoice modifications (Business Email Compromise)
-- Malicious lobby QR codes (Quishing)
-- Inbound IT Helpdesk phone vishing calls for one-time passcodes
-- Reverse-proxy credential harvesting on shared documents
-- Physical "executive bonus" USB drop attacks
-- Rogue public Wi-Fi profiles & evil-twin hotspots
-- Password reuse cascading breaches
-- Advance-fee remote employment scams
-- Browser SSL/TLS certificate warnings & MitM interception
-- Misdirected emails containing confidential payroll sheets
-- Urgent executive CEO WhatsApp gift card requests
+### 2. Website & Link Trust Scanner (Phishing & Typosquatting Dissector)
+*Paste any suspicious link to detect deceptive subdomains, character substitutions (typosquatting), high-risk TLDs, and highlight the true owner root domain.*  
+![Link Trust Scanner](./screenshots/03_link_trust_scanner.png)
 
-Players make a choice, observe the **immediate realistic consequence**, understand the **underlying security principle**, and branch into dynamic investigation or crisis-containment scenarios. At the end of each round, a personalized security-awareness report is generated with practical digital habits.
+### 3. AI Cyber Defense Copilot & Forensic Threat Lab
+*Dual-engine architecture: Default 100% compliant offline heuristic engine + optional Gemini 2.0 Live API toggle to deconstruct threats, synthesize custom scenarios, and consult the cyber mentor.*  
+![AI Cyber Copilot Lab](./screenshots/04_ai_copilot_lab.png)
+
+### 4. Interactive Everyday Scenario (Home & Personal Defense)
+*Realistic everyday situations (e.g. USPS package delivery SMS tracking scams, Netflix billing alerts, bank fraud calls).*  
+![Everyday Scenario](./screenshots/06_everyday_scenario.png)
+
+### 5. Forensic Clue Inspector ("Inspect Red Flags")
+*Interactive hotspot investigation tool exposing unverified carrier warnings, domain typosquatting, and artificial urgency triggers before submitting an action.*  
+![Forensic Clues](./screenshots/07_scenario_clues.png)
+
+### 6. Immediate Consequence Feedback & Security Principle
+*Every choice explains the real-world operational consequence, underlying defense principle, and safe habit formation.*  
+![Consequence Feedback](./screenshots/08_scenario_outcome.png)
+
+### 7. Game Dashboard & 6-Axis Polar Cyber Radar Chart
+*Comprehensive player profile with daily streaks, achievement badges, and a pure SVG polar polygon chart tracking 6 defense disciplines.*  
+![Dashboard & Radar Chart](./screenshots/09_game_dashboard.png)
+
+---
+
+## 1. Project Mission & Background
+
+Most cybersecurity training consists of boring, theoretical annual slide decks and multiple-choice quizzes that people quickly click through. Real-world social engineering attacks, however, target hurried, distracted humans under high emotional urgency.
+
+**Human Firewall**, designed and built by **Adarsh Panicker**, is an interactive, fast-paced decision game that puts players inside authentic digital dilemmas. Rather than testing abstract trivia, it evaluates split-second reflexes against the exact psychological levers used by modern cybercriminals:
+* Artificial urgency deadlines ("Power disconnected in 45 minutes")
+* High-stakes panic ("Nephew arrested, urgent bail money needed")
+* Authority impersonation ("Police Shield #4912", "Chase Fraud Department")
+* Brand mimicry & lookalike domains (`usps-redelivery-portal.top`, `tikt0k.co`)
+* Business Email Compromise (BEC) wire transfer modifications
+* Generative AI voice clones and long-con "wrong number" relationship hooks
 
 ---
 
 ## 2. Key Architecture & Features
 
-### A. The 60-Second Concept
-Each scenario features a calm, non-punitive 60-second visual indicator. It simulates real-life time pressure without ever auto-submitting an answer, locking players out, or penalizing slower reading. Players can pause, reflect, or resume at any time.
+### A. Dedicated Everyday Home Security Suite
+Regular users sitting at home do not manage enterprise SOC servers or review firewall logs. Human Firewall features a dedicated **Everyday & Home Life** track:
+1. **The USPS/FedEx Redelivery SMS Scam:** Fake $1.95 redelivery fee harvesting full credit card credentials.
+2. **The Streaming Subscription Suspended Phishing Email:** Fake Netflix/Disney+ billing alerts stealing logins.
+3. **The Bank Fraud Phone Call & Reverse-OTP:** Scammer posing as bank fraud department asking for the one-time authorization code.
+4. **The Hacked Friend Social Media DM:** High school friend’s Instagram sending *"OMG Alex is this video of you circulating on TikTok?? 😱"*.
+5. **The Fullscreen Browser Scareware Pop-up:** Siren warning *"VIRUS DETECTED! Call Microsoft toll-free"*.
+6. **The Online Marketplace Overpayment Scam:** Fake payment receipt screenshot demanding a refund of excess funds.
+7. **The Smart Home Camera Security Flaw:** Baby monitor / doorbell camera running factory default `admin/123456` passwords.
+8. **The Coffee Shop QR Code Sticker Swap:** Malicious QR overlay placed on a physical café ordering table.
+9. **The AI Distressed Family Voice Clone:** Deepfake voice of a family member claiming an emergency car crash and requesting bail via Bitcoin ATM.
+10. **The 45-Minute Electric Utility Disconnect Threat:** Friday afternoon automated call threatening immediate shutoff unless paid via Zelle.
+11. **The Geek Squad $499.99 Auto-Renewal Refund Scam:** Fake invoice designed to lure victims onto the phone to install remote desktop malware.
+12. **The "Wrong Number" Friendly Text (Pig Butchering):** Scripted rapport-building leading into fraudulent cryptocurrency apps.
 
-### B. Branching Narrative Engine
-Unlike disconnected quizzes, Human Firewall features a real **branching narrative engine**:
-- **Unexpected MFA Push:**
-  - *Approve prompt:* Branches to **Scenario 1B: Account Compromise & Emergency Revocation**, requiring session invalidation.
-  - *Deny & Report:* Branches to **Scenario 1C: SOC Forensics & Threat Attribution**, auditing password reuse.
-  - *Reply in chat:* Branches to **Scenario 1D: Escalated Vishing Call**, testing caller ID spoofing resistance.
-- **Urgent Invoice:**
-  - *Pay invoice:* Branches to **Scenario 2A: Financial Fraud & Emergency Wire Recall**, testing SWIFT recall protocols.
-  - *Out-of-band callback:* Branches to **Scenario 2B: Supply Chain Advisory**, sharing indicators of compromise (IOCs).
-- **Browser SSL Warning:**
-  - *Bypass warning:* Branches to active credential harvesting remediation.
+### B. Workplace & Enterprise Resilience Suite
+For Office Professionals and IT Administrators:
+- **MFA Push Fatigue:** Repeated push notifications from "IT Admin Marcus" to force an accidental approval.
+- **Urgent Supplier Wire Change (BEC):** Spoofed vendor invoice with modified bank wiring instructions.
+- **Inbound IT Support Verification Call:** Fake internal technician asking for an internal directory OTP.
+- **Confidential Financial Spreadsheet:** Reverse-proxy phishing link impersonating corporate single sign-on.
+- **The "Payroll Q3" Dropped USB Flash Drive:** Malicious physical media left in corporate common spaces.
+- **Executive WhatsApp Impersonation:** CEO urgently requesting $2,000 in gift cards during a closed-door meeting.
+- **Untrusted Internal Tool SSL Warning:** Self-signed root CA certificate override dilemma.
 
-### C. Six Core Defensive Disciplines
-Every decision exercises and calculates mastery across 6 core skills:
-1. **Phishing Recognition** (typosquatting, lookalike domains, QR inspection)
-2. **Identity Verification** (out-of-band verification, anti-vishing, authority bias)
-3. **Authentication Safety** (MFA fatigue prevention, passkeys, credential hygiene)
-4. **Privacy & Data Handling** (employment scams, data minimization, exposure containment)
-5. **Incident Response** (active containment, emergency revocation, transparent disclosure)
-6. **Safe Browsing** (TLS/SSL validation, captive portal defense, encrypted tunnels)
+### C. Website & Link Trust Scanner
+A multi-layer URL forensic analyzer accessible directly from the navigation bar:
+- **True Owner Root Domain Detection:** Strips deceptive subdomains and highlights the true destination domain in neon (e.g. `chase.com.security-verify.net` $\rightarrow$ True owner: `security-verify.net`).
+- **Typosquatting & Homoglyph Engine:** Detects character-for-number substitutions (`tikt0k`, `paypa1`, `arnazon`).
+- **Protocol Encryption Audit:** Identifies unencrypted plaintext HTTP transport.
+- **High-Risk TLD Warning:** Flags disposable TLDs (`.top`, `.xyz`, `.cc`, `.tk`, `.online`, `.click`, `.buzz`).
+- **Raw IP Address Check:** Detects numerical IPs (`http://185.220.101.44`) used for credential harvesting.
+- **Executable Payload Warnings:** Detects dangerous extensions (`.exe`, `.apk`, `.zip`, `.scr`) in URL paths.
+- **Authentic Brand Whitelist:** Confirms authentic domains for Chase, Apple, Google, USPS, Netflix, Amazon with verified badges.
 
-### D. Transparent, Deterministic Scoring (0 to 100)
-- Initial base score: 0
-- Safest choices award +20 to +25 points
-- Risky choices award modest partial credit (+5 to +10)
-- Critical security mistakes deduct points (-20 to -25)
-- Normalized to an intuitive 0–100 learning score based on scenarios played
-- Zero AI hallucinations or opaque black-box scoring algorithms
+### D. AI Cyber Defense Copilot & Forensic Lab
+A dual-mode intelligence hub tailored for Hackathon judging:
+- **100% SafeSpace Hacks Compliant (Default):** Built-in local heuristic engine running offline with zero API keys and zero network calls.
+- **Optional Gemini 2.0 / 1.5 Flash Live Integration:** Bring-Your-Own-Key (BYOK) toggle stored securely in browser `localStorage`.
+- **Forensic Threat Deconstruction:** Paste any suspicious SMS, email, or URL to extract psychological levers, severity ratings, and defensive advice.
+- **Infinite Generative Scenario Builder:** Enter any topic (e.g. *"Flight delay refund scam"*) to synthesize an interactive scenario with a 1-click **"Play Scenario Now"** launcher.
+- **Ask Cyber Mentor:** Conversational security coach answering practical questions (voice cloning, gift card extortion, 3-Second Pause Rule).
+- **Compliance Guarantee:** Official challenge scoring is strictly deterministic and rule-based; AI is used purely for educational enrichment.
 
-### E. Adaptive Difficulty Engine
-The engine tracks player mistakes in real time. If a player repeatedly misses identity-verification cues, the system injects targeted verification scenarios with contextual reasoning. If a player excels, the engine escalates to nuanced, ambiguous challenges.
+### E. Deterministic 0–100 Scoring & 6-Axis Polar Radar
+- Base score: 0
+- Safer choices award $+20$ to $+25$ points
+- Risky choices award $+0$ to $+5$ points
+- Critical security mistakes deduct $-25$ points
+- Normalized to an objective 0–100 score across 6 disciplines:
+  1. **Phishing Recognition**
+  2. **Identity Verification**
+  3. **Authentication Safety**
+  4. **Privacy & Data Handling**
+  5. **Incident Response**
+  6. **Safe Browsing**
+- Rendered via a pure SVG **Cyber Radar Polygon Chart** comparing baseline vs achieved defense competencies.
 
-### G. Creative Innovations & Stand-Out Features
-- **Forensic Clue Inspector ("Inspect Red Flags"):** An active investigation tool on each scenario. Players can toggle forensic hotspots that highlight geolocation anomalies, typosquatted hostnames, Reply-To header redirects, and rogue root certificate payloads before making a choice.
-- **6-Axis Cyber Radar Polygon:** A pure SVG visual radar chart that computes the player's hardened vs vulnerable defense vectors in real time across all 6 skills.
-- **Threat Sandbox & URL Anatomy Analyzer:** A standalone educational sandbox tool directly accessible from the navigation bar. Players can dissect URLs into Protocol, Subdomain (Mask), True Root Domain, and Path, instantly exposing subdomain prepending and hyphenated typosquatting.
-- **Voice Dispatch Narration & Audio Ticker:** Integrates browser Web Speech API voice synthesis to narrate scenario briefings aloud for enhanced accessibility and dispatch immersion, along with a heartbeat countdown ticker.
-- **Official Digital Clearance Certificate & Badge:** Generates an official, printable "Human Firewall Defense Clearance" with dynamic rank assignment (e.g. Master Cyber Sentinel), cryptographic verification hash, and seal.
-- **Daily Defense Readiness Streak:** Encourages continuous habit formation with a daily streak tracker persisted locally.
+### F. Digital Clearance Certificate & Badge
+- Generates an official, printable **Security Defense Clearance** with dynamic ranks (e.g. *Master Cyber Sentinel*, *Vigilant Defender*).
+- Includes an automated SHA-style verification hash, official evaluator attribution (**Adarsh Panicker**), and dedicated print stylesheets.
 
-### H. Privacy & Zero-Backend Design
-- **100% Client-Side:** No external database, no server APIs, and no telemetry tracking.
-- **Zero Registration:** Play immediately as an Everyday User, Student, Office Professional, or IT Administrator.
-- **Offline Capable:** Full Progressive Web App (PWA) with service worker caching.
-- **Local Persistence:** History, stats, achievements, and active sessions persist in `localStorage`.
-- **Export & Reset:** One-click JSON data export and complete data reset.
+### G. 100% Client-Side Privacy & Offline PWA
+- **Zero Backend:** No server, no remote database, no tracking cookies, and no telemetry.
+- **Zero Registration:** Start playing immediately without signing in.
+- **Offline Capable:** Service Worker caches application assets for offline access.
+- **Data Portability:** One-click JSON export of all game history and a one-click progress reset.
 
 ---
 
 ## 3. Quick Demo Walkthrough for Judges (Under 3 Minutes)
 
-1. **Launch Human Firewall:** Open the application.
-2. **Instant Demo Mode:** Click the amber **"⚡ Try Demo Scenario"** button in the top navigation or welcome banner.
-3. **Trigger a Mistake:** On the **Unexpected MFA Push** screen, select Option 1 (*"Tap Approve to avoid getting workstation sync blocked"*).
-4. **Observe Branching:** Watch the immediate critical consequence screen explain MFA Push Fatigue. Click **"Continue Along Branch"** to enter the crisis scenario: **Account Compromise & Emergency Revocation**.
-5. **Contain the Incident:** Select the safe containment option (*"Sign out of all sessions and call the emergency SOC hotline"*).
-6. **Start a Quick Challenge:** From the Dashboard, launch **Quick Play** and select the safer choices.
-7. **Inspect the Personalized Report:** View your normalized learning score, skill competency matrix, decision audit trail, and 3 actionable concrete security habits.
-8. **Verify Persistence & Print:** Refresh the page to confirm all stats and achievements persist in `localStorage`. Click **"Print / PDF"** to inspect the print-optimized stylesheet.
+1. **Launch Human Firewall:** Open `http://localhost:5173/`.
+2. **Everyday Home Defense:** Click **Start Playing**, select **Everyday User (Home)**, and start **Quick Play**.
+3. **Experience Real Home Scenarios:** Face the USPS package delivery tracking SMS, Netflix billing phishing email, and Bank fraud phone vishing call.
+4. **Inspect Red Flags:** Click **Inspect Clues (Red Flags)** to reveal subtle typosquatting and panic triggers.
+5. **Test the Link Scanner:** Click **Link Scanner** in the top navigation. Test presets like `usps-redelivery-portal.top` or `chase.com.security-alert-verify.net` to see the visual URL anatomy breakdown.
+6. **Explore the AI Lab:** Click **AI Lab** in the navigation. Run a threat analysis on sample smishing or generate a custom scenario on the fly.
+7. **View the Personalized Report:** Complete a run to view your 6-axis Polar Radar Chart, decision audit trail, and print your **Official Digital Clearance Certificate**.
 
 ---
 
 ## 4. Installation & Local Development
 
 ### Prerequisites
-- Node.js 18+ or 20+ (tested on Node v24.19.0)
-- npm 9+
+* **Node.js:** v18.0.0+ or v20.0.0+ (Tested on Node.js v24.19.0)
+* **npm:** v9.0.0+
 
-### Commands
+### Setup Commands
 
 ```bash
-# 1. Clone repository & navigate to directory
+# 1. Clone repository
+git clone https://github.com/adarshpanicker/human-firewall.git
 cd "Human Firewall"
 
 # 2. Install dependencies
 npm install
 
-# 3. Run development server with Hot Module Replacement
+# 3. Run development server
 npm run dev
 
-# 4. Build optimized production bundle
+# 4. Run automated test suites (28 tests across 8 suites)
+npm test
+
+# 5. Build production bundle
 npm run build
 
-# 5. Preview production build locally
+# 6. Preview production build locally
 npm run preview
 ```
 
-The app will be available locally at `http://localhost:5173`.
+The game will be available at **`http://localhost:5173/`**.
 
 ---
 
-## 5. Project Structure
+## 5. Automated Verification & Testing
+
+Human Firewall includes **28 comprehensive unit tests** across 8 test suites:
+
+```
+✓ src/__tests__/scoringEngine.test.ts          # Deterministic 0-100 rubric calculations
+✓ src/__tests__/aiService.test.ts              # Heuristic threat scanner & scenario synthesis
+✓ src/__tests__/urlScannerService.test.ts      # Subdomain spoofing, typosquatting & TLD checks
+✓ src/__tests__/branchingEngine.test.ts        # Dynamic narrative path resolution
+✓ src/__tests__/adaptiveEngine.test.ts         # Profile-based queues (Everyday vs Workplace)
+✓ src/__tests__/achievementEngine.test.ts      # Milestone and skill unlock criteria
+✓ src/__tests__/scenarios.test.ts              # Schema and option impact validation
+✓ src/__tests__/scenarioValidationAudit.test.ts# Deep integrity audit (0 duplicate IDs, 0 dead ends)
+
+Test Files:  8 passed (8)
+Tests:       28 passed (28)
+Duration:    ~500ms
+```
+
+---
+
+## 6. Project Architecture & File Organization
 
 ```
 ├── public/
-│   ├── favicon.svg             # Shield and lightning SVG icon
-│   ├── manifest.json           # PWA standalone manifest
-│   └── sw.js                   # Service Worker offline asset cache
+│   ├── favicon.svg                   # Shield & lightning brand SVG
+│   ├── manifest.json                 # PWA standalone web manifest
+│   └── sw.js                         # Service Worker offline asset cache
+├── screenshots/                      # High-resolution application captures
+│   ├── 01_welcome_screen.png
+│   ├── 02_welcome_preview_denied.png
+│   ├── 03_link_trust_scanner.png
+│   ├── 04_ai_copilot_lab.png
+│   ├── 05_player_setup.png
+│   ├── 06_everyday_scenario.png
+│   ├── 07_scenario_clues.png
+│   ├── 08_scenario_outcome.png
+│   └── 09_game_dashboard.png
 ├── src/
 │   ├── types/
-│   │   └── game.ts             # TypeScript definitions for scenarios, options, sessions, stats
+│   │   └── game.ts                   # TypeScript interfaces for scenarios, options, sessions, stats
 │   ├── data/
-│   │   ├── scenarios.ts        # 12 Core scenarios + 5 branching storylines
-│   │   └── achievements.ts     # Milestone, skill, and recovery achievements
+│   │   ├── scenarios.ts              # 36 complete scenarios (12 Everyday, 12 Core, 6 Branches, 6 Specialized)
+│   │   └── achievements.ts           # Criteria-based milestone and defense achievements
 │   ├── engine/
-│   │   ├── scoringEngine.ts    # Deterministic 0-100 score & skill breakdown calculation
-│   │   ├── branchingEngine.ts  # Dynamic narrative path resolution & queue manager
-│   │   ├── adaptiveEngine.ts   # Weakness analysis & targeted scenario selection
-│   │   ├── achievementEngine.ts# Criteria-based achievement unlocks
-│   │   ├── storageEngine.ts    # Safe localStorage persistence, JSON export, and reset
-│   │   └── reportGenerator.ts  # Personalized report, recommendations, & comparisons
-│   ├── utils/
-│   │   ├── audio.ts            # Zero-dependency Web Audio API synthesizer
-│   │   └── scenarioValidator.ts# Comprehensive data integrity validation suite
+│   │   ├── scoringEngine.ts          # Deterministic scoring & 6 skill calculations
+│   │   ├── branchingEngine.ts        # Dynamic narrative branch resolver
+│   │   ├── adaptiveEngine.ts         # Audience-aware scenario queues & difficulty adaptation
+│   │   ├── achievementEngine.ts      # Achievement unlock evaluator
+│   │   ├── storageEngine.ts          # LocalStorage persistence, streak tracking, JSON export
+│   │   └── reportGenerator.ts        # Personalized security recommendations generator
+│   ├── services/
+│   │   ├── aiService.ts              # AI Copilot, heuristic threat analyzer & scenario generator
+│   │   └── urlScannerService.ts      # URL dissector, typosquatting, brand whitelist & TLD auditor
 │   ├── components/
-│   │   ├── Navbar.tsx          # Sticky cyber header with quick demo launcher & audio toggle
-│   │   ├── Footer.tsx          # Simulation disclaimer, 100% client-side tag, and data links
-│   │   ├── WelcomeScreen.tsx   # Hero landing, 60-sec concept, and 5-sec interactive teaser
-│   │   ├── PlayerSetupModal.tsx# Role profiles (Everyday, Student, Office, Admin) & modes
-│   │   ├── GameDashboard.tsx   # Radar skill competency matrix, stats, and achievements
-│   │   ├── InteractiveScenarioScreen.tsx # 60-sec calm timer, narrative, and keyboard shortcuts
-│   │   ├── SimulatedMessage.tsx# MFA, Email, QR, Phone Call, USB, Wi-Fi, and SSL warning UIs
-│   │   ├── DecisionOptionCard.tsx  # Keyboard-accessible [1-4] option cards
-│   │   ├── OutcomeFeedbackCard.tsx # Immediate feedback, consequence, and security principle
-│   │   ├── ResultsReport.tsx   # Score gauge, recommendations, decision audit, and PDF print
-│   │   ├── PracticeModePicker.tsx  # Category & difficulty filtering library
-│   │   └── HowItWorksModal.tsx # Educational mission & guidelines modal
-│   ├── App.tsx                 # Root state controller and view coordinator
-│   ├── index.css               # Tailwind CSS, cyber theme tokens, and print stylesheets
-│   └── main.tsx                # React DOM entry point
-├── tailwind.config.js          # Dark navy palette, cyber accents, and custom animations
-├── tsconfig.json               # TypeScript project references
+│   │   ├── Navbar.tsx                # Sticky navigation with Link Scanner, AI Lab & Audio toggle
+│   │   ├── Footer.tsx                # Creator attribution, client-side tag & data controls
+│   │   ├── WelcomeScreen.tsx         # Hero banner, 60-second teaser & quick play CTA
+│   │   ├── PlayerSetupModal.tsx      # Audience selection (Everyday, Student, Office, Admin)
+│   │   ├── GameDashboard.tsx         # Stats, Cyber Radar chart, streak counter & challenge cards
+│   │   ├── InteractiveScenarioScreen.tsx # 60-second timer, clue inspector, dispatch audio
+│   │   ├── UrlTrustScannerModal.tsx  # Website & link trust analyzer modal
+│   │   ├── AiSecurityCopilotModal.tsx# AI Copilot threat analyzer, scenario generator & mentor
+│   │   ├── CyberRadarChart.tsx       # 6-axis polar SVG radar polygon
+│   │   ├── ClearanceCertificateModal.tsx # Printable official security clearance certificate
+│   │   ├── ResultsReport.tsx         # Score gauge, skill breakdown, decision audit & PDF print
+│   │   ├── PracticeModePicker.tsx    # Scenario library with Everyday vs Workplace filter tabs
+│   │   └── HowItWorksModal.tsx       # Educational rules and mission modal
+│   ├── utils/
+│   │   └── audio.ts                  # Web Audio synthesizer & Web Speech dispatch narrator
+│   ├── App.tsx                       # Root view and state manager
+│   ├── main.tsx                      # Application entry point
+│   └── index.css                     # Tailwind tokens, cyber glow effects & print stylesheets
+├── scripts/
+│   └── captureScreenshots.mjs        # Automated Playwright screenshot generator
+├── tailwind.config.js
+├── tsconfig.json
 └── package.json
 ```
 
 ---
 
-## 6. Attribution & Credits
+## 7. Author, License & Credits
 
-- **Framework:** React & Vite
-- **Styling:** Tailwind CSS
-- **Icons:** [Lucide Icons](https://lucide.dev/)
-- **Celebration Effects:** [canvas-confetti](https://github.com/catdad/canvas-confetti)
-- **Audio:** Custom Web Audio API synthesizer (`src/utils/audio.ts`), requiring zero external audio assets.
-- **Scenario Content & Graphics:** Fictional synthetic scenarios, simulated email clients, authenticator prompts, QR scanner viewfinders, and SVG illustrations authored specifically for the SafeSpace Hacks 2026 hackathon.
-- **Disclaimer:** All organizations (Apex Cloud, Pinnacle Paper, etc.) and individuals depicted are fictional simulations created for educational purposes.
+* **Creator & Developer:** **Adarsh Panicker**
+* **Event:** SafeSpace Hacks 2026
+* **Icons:** [Lucide Icons](https://lucide.dev/)
+* **Audio Synthesis:** Web Audio API & Web Speech Synthesis API
+* **Celebration Effects:** [canvas-confetti](https://github.com/catdad/canvas-confetti)
+* **License:** MIT License
+
+*Disclaimer: All organizations, domains, emails, and phone numbers depicted in scenarios are synthetic fictional representations created exclusively for educational awareness.*

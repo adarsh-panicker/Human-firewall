@@ -51,9 +51,9 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
       {/* Hero Section */}
       <div className="text-center flex flex-col items-center">
         {/* Badge */}
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-xs font-mono font-medium mb-6 animate-pulse-glow">
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-xs font-mono font-medium mb-6 animate-pulse-glow">
           <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-          <span>SafeSpace Hacks 2026 Submission</span>
+          <span>SafeSpace Hacks 2026 • By Adarsh Panicker</span>
         </div>
 
         {/* Logo and Title */}
@@ -64,11 +64,14 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
           </div>
         </div>
 
-        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white mb-3">
+        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white mb-2">
           Human Firewall
         </h1>
-        <p className="text-xl sm:text-2xl font-medium text-cyan-300 mb-4">
+        <p className="text-xl sm:text-2xl font-medium text-cyan-300 mb-1">
           The 60-Second Decision Game
+        </p>
+        <p className="text-xs sm:text-sm font-mono text-slate-400 mb-4">
+          Created & Designed by <span className="text-cyan-400 font-bold">Adarsh Panicker</span>
         </p>
         <p className="text-slate-300 max-w-2xl text-base sm:text-lg leading-relaxed mb-8">
           <strong className="text-white">Every click is a choice. Every choice teaches you something.</strong>

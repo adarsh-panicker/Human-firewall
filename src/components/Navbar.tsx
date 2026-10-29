@@ -57,7 +57,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               </span>
             </div>
             <p className="text-xs text-slate-400 hidden sm:block">
-              The 60-Second Decision Game
+              The 60-Second Decision Game <span className="text-slate-500">•</span> <span className="text-cyan-400 font-medium">By Adarsh Panicker</span>
             </p>
           </div>
         </button>

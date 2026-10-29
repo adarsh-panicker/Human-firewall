@@ -103,10 +103,11 @@ export const HowItWorksModal: React.FC<HowItWorksModalProps> = ({ isOpen, onClos
           </div>
         </div>
 
-        <div className="mt-8 pt-4 border-t border-navy-800 flex justify-end">
+        <div className="mt-8 pt-4 border-t border-navy-800 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-400">
+          <span>Created by <strong className="text-cyan-300">Adarsh Panicker</strong> for SafeSpace Hacks 2026</span>
           <button
             onClick={onClose}
-            className="px-6 py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-navy-950 font-bold text-xs transition-colors"
+            className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-navy-950 font-bold text-xs transition-colors"
           >
             Understood, Let's Play!
           </button>
