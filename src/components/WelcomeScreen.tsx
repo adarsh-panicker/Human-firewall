@@ -132,11 +132,11 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
             </div>
             <div className="text-left flex-1 min-w-0">
               <div className="flex items-center justify-between">
-                <span className="font-semibold text-sm text-slate-200">Apex Authenticator</span>
+                <span className="font-semibold text-sm text-slate-200">Account Security Alert</span>
                 <span className="text-[11px] text-slate-400">Just now</span>
               </div>
               <p className="text-xs text-slate-300 mt-0.5">
-                Sign-in request for <span className="font-mono text-cyan-300">alex.taylor@apex.internal</span>
+                Sign-in authorization for <span className="font-mono text-cyan-300">alex.taylor@gmail.com</span>
               </p>
               <div className="mt-2 text-[11px] bg-navy-900/90 p-2 rounded text-slate-300 font-mono border border-navy-800/80">
                 📍 Location: Bucharest, Romania • IP: 185.220.101.44
@@ -158,7 +158,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
               onClick={handleMiniDeny}
               className="flex-1 py-2.5 px-4 rounded-lg bg-teal-500/20 hover:bg-teal-500/30 border border-teal-500/50 text-teal-300 text-xs font-semibold transition-all text-center"
             >
-              Deny & Report to Security
+              Deny & Block Intruder
             </button>
           </div>
         )}
@@ -197,7 +197,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
               <span>Safer Choice: Attack Blocked!</span>
             </div>
             <p className="text-xs text-slate-300 leading-relaxed mb-3">
-              Spot on. Never approve unprompted pushes. Denying stops the intruder and reporting alerts your SOC to revoke compromised credentials.
+              Spot on. Never approve unprompted sign-in notifications. Denying stops the intruder from breaching your account, and changing your password protects your personal data.
             </p>
             <div className="flex items-center justify-between text-xs">
               <button

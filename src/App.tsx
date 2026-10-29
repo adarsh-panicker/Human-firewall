@@ -75,7 +75,7 @@ export const App: React.FC = () => {
     mode: GameMode, 
     explicitQueue?: string[]
   ) => {
-    const queue = explicitQueue || buildInitialScenarioQueue(mode);
+    const queue = explicitQueue || buildInitialScenarioQueue(mode, undefined, profile);
     const newSession: GameSession = {
       sessionId: `HF-${Date.now().toString(36).toUpperCase()}`,
       mode,
@@ -104,10 +104,15 @@ export const App: React.FC = () => {
     }));
   }, [userData.displayName, updateUserDataAndSave]);
 
-  // Quick Demo Scenario trigger (judge mode: 1-click launch of MFA challenge)
+  // Quick Demo Scenario trigger (instant 1-click launch tailored to user profile)
   const handleLaunchDemo = useCallback(() => {
     soundManager.playClick();
-    startNewGameSession(userData.profile, userData.displayName, 'demo', ['sc-mfa-1']);
+    const demoId = userData.profile === 'everyday' 
+      ? 'sc-home-delivery-1' 
+      : userData.profile === 'student' 
+        ? 'sc-fake-job-1' 
+        : 'sc-mfa-1';
+    startNewGameSession(userData.profile, userData.displayName, 'demo', [demoId]);
   }, [userData.profile, userData.displayName, startNewGameSession]);
 
   // Handle player making a decision on the interactive scenario screen

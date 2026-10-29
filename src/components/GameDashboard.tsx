@@ -56,10 +56,10 @@ export const GameDashboard: React.FC<GameDashboardProps> = ({
       <div className="bg-navy-900/90 border border-navy-700/80 rounded-2xl p-6 sm:p-8 shadow-xl relative overflow-hidden">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-navy-800">
           <div>
-            <div className="flex items-center gap-2 mb-1.5">
+            <div className="flex items-center gap-2 mb-1.5 flex-wrap">
               <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="text-xs font-mono uppercase tracking-wider text-cyan-300">
-                Security Profile Active • {profile.toUpperCase()}
+              <span className="text-xs font-mono uppercase tracking-wider text-cyan-300 font-bold">
+                {profile === 'everyday' ? '🏠 Everyday Home Security Mode' : profile === 'student' ? '🎓 Student & Campus Mode' : profile === 'office' ? '💼 Workplace & Business Mode' : '🛡️ IT Administrator Mode'}
               </span>
               {stats.dailyStreak > 0 && (
                 <span className="inline-flex items-center gap-1 text-[11px] font-mono font-bold text-amber-300 bg-amber-500/10 border border-amber-500/30 px-2 py-0.5 rounded-full">
@@ -71,8 +71,10 @@ export const GameDashboard: React.FC<GameDashboardProps> = ({
             <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
               Welcome back, {displayName || 'Cyber Operator'}
             </h1>
-            <p className="text-xs sm:text-sm text-slate-400 mt-1">
-              Test your reflexes against evolving social engineering threats and zero-day psychological tactics.
+            <p className="text-xs sm:text-sm text-slate-400 mt-1 max-w-2xl">
+              {profile === 'everyday' 
+                ? 'Tailored for real home situations: delivery tracking SMS, Netflix billing alerts, bank fraud calls, hacked friend messages, and smart devices.'
+                : 'Test your reflexes against evolving social engineering threats, business email compromises, and zero-day psychological tactics.'}
             </p>
           </div>
 
@@ -196,7 +198,11 @@ export const GameDashboard: React.FC<GameDashboardProps> = ({
                 Quick Play
               </h3>
               <p className="text-xs text-slate-300 leading-relaxed mb-4">
-                3 fast-paced realistic scenarios. Ideal for a quick security reflex tune-up.
+                {profile === 'everyday' 
+                  ? '3 rapid home scenarios: fake package delivery SMS, streaming subscription alert, and bank fraud call.' 
+                  : profile === 'student'
+                    ? '3 campus scenarios: remote student job scam, hacked friend DM, and café Wi-Fi.'
+                    : '3 fast-paced enterprise scenarios: MFA push fatigue, supplier wire invoice, and IT support caller.'}
               </p>
             </div>
             <button
@@ -229,7 +235,11 @@ export const GameDashboard: React.FC<GameDashboardProps> = ({
                 Full Challenge
               </h3>
               <p className="text-xs text-slate-300 leading-relaxed mb-4">
-                8 comprehensive scenarios with active branching storylines and deep adaptive evaluations.
+                {profile === 'everyday'
+                  ? '8 everyday home scenarios: delivery tracking SMS, Netflix billing, bank OTP vishing, hacked friend DMs, scareware popups, marketplace scams, smart cameras, and QR codes.'
+                  : profile === 'student'
+                    ? '8 student scenarios: fake recruitment jobs, peer file sharing, public Wi-Fi, leaked passwords, and phishing.'
+                    : '8 comprehensive enterprise scenarios with active branching storylines and deep adaptive evaluations.'}
               </p>
             </div>
             <button

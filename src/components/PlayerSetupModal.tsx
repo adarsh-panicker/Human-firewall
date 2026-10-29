@@ -30,10 +30,10 @@ const PROFILES: {
 }[] = [
   {
     id: 'everyday',
-    title: 'Everyday User',
+    title: 'Everyday User (Home)',
     icon: <User className="w-5 h-5 text-cyan-400" />,
-    desc: 'Personal email, online banking, shopping, passwords, and home Wi-Fi.',
-    tagline: 'Practical personal defense'
+    desc: 'Delivery tracking SMS, streaming billing alerts, bank fraud calls, hacked friend DMs, and smart home cameras.',
+    tagline: 'Home & Everyday Life (No Corporate Jargon)'
   },
   {
     id: 'student',

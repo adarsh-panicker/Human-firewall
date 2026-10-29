@@ -51,10 +51,13 @@ export interface ForensicClue {
   redFlagLevel: 'subtle' | 'moderate' | 'critical';
 }
 
+export type ScenarioAudience = 'everyday' | 'workplace' | 'student' | 'universal';
+
 export interface Scenario {
   id: string;
   title: string;
   category: SkillCategory;
+  audience: ScenarioAudience;
   difficulty: DifficultyLevel;
   estimatedReadingSec: number;
   narrative: string;
