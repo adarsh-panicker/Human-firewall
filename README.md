@@ -65,7 +65,15 @@ Every decision exercises and calculates mastery across 6 core skills:
 ### E. Adaptive Difficulty Engine
 The engine tracks player mistakes in real time. If a player repeatedly misses identity-verification cues, the system injects targeted verification scenarios with contextual reasoning. If a player excels, the engine escalates to nuanced, ambiguous challenges.
 
-### F. Privacy & Zero-Backend Design
+### G. Creative Innovations & Stand-Out Features
+- **Forensic Clue Inspector ("Inspect Red Flags"):** An active investigation tool on each scenario. Players can toggle forensic hotspots that highlight geolocation anomalies, typosquatted hostnames, Reply-To header redirects, and rogue root certificate payloads before making a choice.
+- **6-Axis Cyber Radar Polygon:** A pure SVG visual radar chart that computes the player's hardened vs vulnerable defense vectors in real time across all 6 skills.
+- **Threat Sandbox & URL Anatomy Analyzer:** A standalone educational sandbox tool directly accessible from the navigation bar. Players can dissect URLs into Protocol, Subdomain (Mask), True Root Domain, and Path, instantly exposing subdomain prepending and hyphenated typosquatting.
+- **Voice Dispatch Narration & Audio Ticker:** Integrates browser Web Speech API voice synthesis to narrate scenario briefings aloud for enhanced accessibility and dispatch immersion, along with a heartbeat countdown ticker.
+- **Official Digital Clearance Certificate & Badge:** Generates an official, printable "Human Firewall Defense Clearance" with dynamic rank assignment (e.g. Master Cyber Sentinel), cryptographic verification hash, and seal.
+- **Daily Defense Readiness Streak:** Encourages continuous habit formation with a daily streak tracker persisted locally.
+
+### H. Privacy & Zero-Backend Design
 - **100% Client-Side:** No external database, no server APIs, and no telemetry tracking.
 - **Zero Registration:** Play immediately as an Everyday User, Student, Office Professional, or IT Administrator.
 - **Offline Capable:** Full Progressive Web App (PWA) with service worker caching.

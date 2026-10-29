@@ -30,6 +30,7 @@ import { InteractiveScenarioScreen } from './components/InteractiveScenarioScree
 import { ResultsReport } from './components/ResultsReport';
 import { PracticeModePicker } from './components/PracticeModePicker';
 import { HowItWorksModal } from './components/HowItWorksModal';
+import { ThreatSandboxModal } from './components/ThreatSandboxModal';
 import { soundManager } from './utils/audio';
 
 type ActiveView = 'welcome' | 'dashboard' | 'game' | 'results' | 'practice';
@@ -39,6 +40,7 @@ export const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<ActiveView>('welcome');
   const [isSetupOpen, setIsSetupOpen] = useState<boolean>(false);
   const [isHowItWorksOpen, setIsHowItWorksOpen] = useState<boolean>(false);
+  const [isThreatSandboxOpen, setIsThreatSandboxOpen] = useState<boolean>(false);
   const [targetPracticeSkill, setTargetPracticeSkill] = useState<SkillCategory | null>(null);
 
   // Active game session state
@@ -298,6 +300,10 @@ export const App: React.FC = () => {
           soundManager.playClick();
           setIsHowItWorksOpen(true);
         }}
+        onOpenThreatSandbox={() => {
+          soundManager.playClick();
+          setIsThreatSandboxOpen(true);
+        }}
         soundEnabled={userData.preferences.soundEffects}
         onToggleSound={handleToggleSound}
         userProfile={userData.profile}
@@ -409,6 +415,12 @@ export const App: React.FC = () => {
       <HowItWorksModal
         isOpen={isHowItWorksOpen}
         onClose={() => setIsHowItWorksOpen(false)}
+      />
+
+      {/* Threat Sandbox Modal */}
+      <ThreatSandboxModal
+        isOpen={isThreatSandboxOpen}
+        onClose={() => setIsThreatSandboxOpen(false)}
       />
     </div>
   );

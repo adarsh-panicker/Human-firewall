@@ -25,6 +25,20 @@ export const SCENARIOS: Scenario[] = [
     },
     learningObjective: 'Recognize MFA fatigue attacks and never approve an authentication request you did not personally trigger.',
     safetyTakeaway: 'An unexpected MFA prompt means someone has your password. Treat unprompted MFA pushes as unauthorized access attempts.',
+    forensicClues: [
+      {
+        id: 'clue-mfa-geo',
+        element: 'Location: Bucharest, Romania (IP: 185.220.101.44)',
+        description: 'Geolocation Anomaly: The authentication request originates from a foreign IP while you are in your home office.',
+        redFlagLevel: 'critical'
+      },
+      {
+        id: 'clue-mfa-chat',
+        element: 'Devon Vance (IT Helpdesk Chat Message)',
+        description: 'Impersonation & Coercion: Real IT staff never ask users via casual chat to approve unexpected login prompts.',
+        redFlagLevel: 'critical'
+      }
+    ],
     profileFlavor: {
       admin: 'IT Administrator context: Adversaries use MFA push bombing to bypass traditional second factors when credentials have already leaked.',
       office: 'Office context: IT will never ask you in an ad-hoc direct chat to approve an unexpected login prompt.',
@@ -234,6 +248,26 @@ export const SCENARIOS: Scenario[] = [
     },
     learningObjective: 'Identify Business Email Compromise (BEC) and verify banking changes out-of-band.',
     safetyTakeaway: 'Any change to wire instructions or banking accounts must be validated using an independent, verified phone number on file.',
+    forensicClues: [
+      {
+        id: 'clue-inv-domain',
+        element: 'Sender domain <sarah.jenkins@pinnacle-paper-supply.com>',
+        description: 'Typosquatting: Official vendor domain is pinnaclepaper.com. Attackers registered a lookalike variation.',
+        redFlagLevel: 'critical'
+      },
+      {
+        id: 'clue-inv-replyto',
+        element: 'Reply-To: accounting-audit@fastmail-routing.net',
+        description: 'Header Redirection: Directs your reply to an external adversary server rather than the sender.',
+        redFlagLevel: 'critical'
+      },
+      {
+        id: 'clue-inv-urgency',
+        element: 'Urgency requirement: "Must be wired by 2 PM to release order"',
+        description: 'Manufactured Crisis: False deadlines pressure accounting personnel into bypassing secondary approvals.',
+        redFlagLevel: 'moderate'
+      }
+    ],
     profileFlavor: {
       office: 'Finance & Operations context: Supplier account changes are the single largest source of enterprise wire fraud worldwide.',
       admin: 'Look for subtle email header discrepancies like domain typosquatting and mismatched Reply-To headers.',
@@ -377,6 +411,20 @@ export const SCENARIOS: Scenario[] = [
     },
     learningObjective: 'Identify QR code phishing ("Quishing") and inspect destination URLs before entering credentials.',
     safetyTakeaway: 'QR codes obscure the destination URL. Always preview the full link, check the domain, and never enter credentials on random scanned pages.',
+    forensicClues: [
+      {
+        id: 'clue-qr-host',
+        element: 'Decoded URL: login-auth-techsummit2026.cloud-redirect.net',
+        description: 'Masked Hostname: The link ends in .cloud-redirect.net, not the official conference organization.',
+        redFlagLevel: 'critical'
+      },
+      {
+        id: 'clue-qr-sticker',
+        element: 'Lobby Coffee Poster Sticker',
+        description: 'Physical Tampering: Malicious QR stickers placed over legitimate public flyers divert users to credential harvesters.',
+        redFlagLevel: 'moderate'
+      }
+    ],
     profileFlavor: {
       student: 'Campus noticeboards are prime targets for malicious QR codes offering fake discounts or event passes.',
       office: 'Physical workplace spaces can easily have malicious stickers placed over legitimate building signage.',
@@ -435,6 +483,20 @@ export const SCENARIOS: Scenario[] = [
     },
     learningObjective: 'Never disclose one-time passwords (OTP) or authentication codes to anyone, including purported IT support.',
     safetyTakeaway: 'One-time passcodes verify YOU to the system. Legitimate support agents have administrative tools and never require your personal OTP.',
+    forensicClues: [
+      {
+        id: 'clue-call-sms-warning',
+        element: 'SMS Passcode: "DO NOT SHARE THIS WITH ANYONE"',
+        description: 'Explicit Security Advisory: The automated passcode SMS specifically warns that the organization will never ask for the code.',
+        redFlagLevel: 'critical'
+      },
+      {
+        id: 'clue-call-callerid',
+        element: 'Inbound Phone Call (+1 800 extension)',
+        description: 'VoIP Spoofing: Inbound Caller ID can be easily fabricated to match corporate directory numbers.',
+        redFlagLevel: 'critical'
+      }
+    ],
     profileFlavor: {
       admin: 'System administrators manage directory roles directly; requesting end-user OTPs violates internal security baselines.',
       office: 'No genuine IT staff member needs your MFA or verification code to patch your device.',
@@ -494,6 +556,20 @@ export const SCENARIOS: Scenario[] = [
     },
     learningObjective: 'Inspect domains on file-sharing portals and recognize reverse-proxy credential harvesting pages.',
     safetyTakeaway: 'Having an SSL padlock (HTTPS) only means the connection is encrypted—it does not mean the website owner is legitimate or safe.',
+    forensicClues: [
+      {
+        id: 'clue-doc-url',
+        element: 'URL Hostname: portal-sync8.com',
+        description: 'Reverse-Proxy Phishing: The actual destination domain is portal-sync8.com rather than the official enterprise cloud domain.',
+        redFlagLevel: 'critical'
+      },
+      {
+        id: 'clue-doc-curiosity',
+        element: 'Filename: "Q4_Salary_Adjustments_CONFIDENTIAL.xlsx"',
+        description: 'Curiosity Trap: Provocative compensation titles trigger emotional curiosity so victims overlook hostname discrepancies.',
+        redFlagLevel: 'moderate'
+      }
+    ],
     options: [
       {
         id: 'doc-opt-check-domain-abort',
@@ -547,6 +623,20 @@ export const SCENARIOS: Scenario[] = [
     },
     learningObjective: 'Prevent BadUSB and dropped media malware attacks by adhering to hardware isolation protocols.',
     safetyTakeaway: 'Never plug unknown USB devices into any computer. Malicious flash drives can emulate keyboards to execute instant payloads.',
+    forensicClues: [
+      {
+        id: 'clue-usb-tape',
+        element: 'Masking Tape Label: "Q1 Exec Bonus Structure"',
+        description: 'Physical Baiting: Enticing executive labels exploit human curiosity to bypass physical cybersecurity controls.',
+        redFlagLevel: 'critical'
+      },
+      {
+        id: 'clue-usb-drop',
+        element: 'Unattended Hardware on Breakroom Table',
+        description: 'Drop Attack: Attackers strategically place rogue USB devices in high-traffic shared office areas.',
+        redFlagLevel: 'critical'
+      }
+    ],
     profileFlavor: {
       office: 'Curiosity drops are a classic physical penetration testing and cyber espionage tactic.',
       admin: 'USB devices can execute Rubber Ducky keyboard injection attacks in milliseconds without relying on autorun.',
@@ -607,6 +697,20 @@ export const SCENARIOS: Scenario[] = [
     },
     learningObjective: 'Safely operate on public networks using corporate VPNs or cellular hotspots without installing untrusted profiles.',
     safetyTakeaway: 'Never install configuration profiles or certificates to connect to public Wi-Fi. Always tunnel sensitive work via trusted VPN or personal mobile hotspot.',
+    forensicClues: [
+      {
+        id: 'clue-wifi-profile',
+        element: 'Captive Portal: "Install Security Profile .mobileconfig"',
+        description: 'Root CA Injection: Profiles often install rogue root certificates that strip HTTPS encryption from your device.',
+        redFlagLevel: 'critical'
+      },
+      {
+        id: 'clue-wifi-open',
+        element: 'Unencrypted Open Network ("Terminal_Lounge_5G_VIP")',
+        description: 'Evil-Twin Risk: Unencrypted networks broadcast device metadata and expose traffic to local peer interception.',
+        redFlagLevel: 'moderate'
+      }
+    ],
     options: [
       {
         id: 'wifi-opt-hotspot-vpn',
@@ -660,6 +764,14 @@ export const SCENARIOS: Scenario[] = [
     },
     learningObjective: 'Adopt unique passwords per service, password managers, and passkeys to defeat credential stuffing.',
     safetyTakeaway: 'Password reuse turns a breach on a low-importance website into a direct threat to your most sensitive accounts.',
+    forensicClues: [
+      {
+        id: 'clue-pwd-reuse',
+        element: 'Identical Password Across Services (`CascadeSummer#2024`)',
+        description: 'Credential Stuffing Exposure: Adversaries test leaked breach pairs automatically against high-value targets like email and banking.',
+        redFlagLevel: 'critical'
+      }
+    ],
     options: [
       {
         id: 'pwd-opt-manager-passkeys',
@@ -714,6 +826,20 @@ export const SCENARIOS: Scenario[] = [
     },
     learningObjective: 'Identify employment scams, protect government identity documents, and recognize payment advance fraud.',
     safetyTakeaway: 'Legitimate employers never conduct entire hiring processes through messaging apps alone, never demand advance payments, and never ask for fees for equipment.',
+    forensicClues: [
+      {
+        id: 'clue-job-advance-fee',
+        element: 'Advance $250 Equipment Fee Request',
+        description: 'Advance-Fee Fraud: Real employers provide equipment and never demand upfront fees from job applicants.',
+        redFlagLevel: 'critical'
+      },
+      {
+        id: 'clue-job-passport',
+        element: 'Immediate Passport & Government ID Request over Chat',
+        description: 'Identity Theft Harvester: Scammers request government documents early to create synthetic identities and fraudulent accounts.',
+        redFlagLevel: 'critical'
+      }
+    ],
     options: [
       {
         id: 'job-opt-verify-decline',
@@ -768,6 +894,20 @@ export const SCENARIOS: Scenario[] = [
     },
     learningObjective: 'Respect browser TLS/SSL certificate warnings and never bypass invalid certificate screens on untrusted networks.',
     safetyTakeaway: 'Certificate errors mean the encryption key does not match the true server. Bypassing it exposes all passwords to active interception (MitM).',
+    forensicClues: [
+      {
+        id: 'clue-cert-mismatch',
+        element: 'Certificate Subject: *.hotel-guest-gateway.traffic-inspect.com',
+        description: 'Common Name Mismatch: The gateway is presenting its own proxy certificate instead of the authentic payroll server.',
+        redFlagLevel: 'critical'
+      },
+      {
+        id: 'clue-cert-issuer',
+        element: 'Untrusted Local Gateway Proxy CA',
+        description: 'Man-in-the-Middle Proxy: An unauthorized intermediate device is attempting to terminate and inspect encrypted TLS sessions.',
+        redFlagLevel: 'critical'
+      }
+    ],
     options: [
       {
         id: 'cert-opt-halt-investigate',
@@ -823,6 +963,20 @@ export const SCENARIOS: Scenario[] = [
     },
     learningObjective: 'Follow incident reporting, data breach containment, and prompt disclosure protocols when sensitive data is exposed.',
     safetyTakeaway: 'Accidents happen. The difference between a manageable mistake and a disastrous breach is rapid containment and truthful reporting.',
+    forensicClues: [
+      {
+        id: 'clue-share-autofill',
+        element: 'Recipient domain: @competitor-firm.com',
+        description: 'External Domain Mismatch: Email autofill matched a recipient outside your trusted organization.',
+        redFlagLevel: 'critical'
+      },
+      {
+        id: 'clue-share-content',
+        element: 'Attachment: Employee_Tax_Records_2026_Final.xlsx',
+        description: 'High-Risk PII: Tax identification numbers and personal records represent heavily regulated privacy data.',
+        redFlagLevel: 'critical'
+      }
+    ],
     profileFlavor: {
       office: 'Data privacy regulations (like GDPR/CCPA) impose strict notification timelines starting the minute an exposure occurs.',
       admin: 'Immediate technical actions (such as mail transport tenant message recall) can only occur if reported instantly.',
@@ -882,6 +1036,20 @@ export const SCENARIOS: Scenario[] = [
     },
     learningObjective: 'Recognize executive impersonation (CEO fraud) and gift card procurement scams.',
     safetyTakeaway: 'No executive or legitimate organization asks staff to buy gift cards or bypass financial controls for confidential deals.',
+    forensicClues: [
+      {
+        id: 'clue-ceo-giftcard',
+        element: 'Demand to Buy Apple Gift Cards & Send Codes',
+        description: 'Untraceable Payment Scams: Scammers demand retail gift cards because the redemption codes cannot be reversed or traced once scratched.',
+        redFlagLevel: 'critical'
+      },
+      {
+        id: 'clue-ceo-secrecy',
+        element: 'Explicit Secrecy & Channel Prohibition: "Do not call my line"',
+        description: 'Isolation Tactic: Attackers forbid out-of-band verification to prevent victims from checking with other staff.',
+        redFlagLevel: 'critical'
+      }
+    ],
     profileFlavor: {
       office: 'Executive impersonation exploits authority bias and fear of questioning leadership.',
       student: 'Scammers frequently impersonate deans or professors asking students or research assistants for gift card codes.',

@@ -44,6 +44,13 @@ export type SimulatedType =
   | 'datasheet'
   | 'sms';
 
+export interface ForensicClue {
+  id: string;
+  element: string;
+  description: string;
+  redFlagLevel: 'subtle' | 'moderate' | 'critical';
+}
+
 export interface Scenario {
   id: string;
   title: string;
@@ -59,6 +66,7 @@ export interface Scenario {
   branchingFollowupIds?: string[];
   adaptiveTags?: string[];
   profileFlavor?: Partial<Record<UserProfile, string>>;
+  forensicClues?: ForensicClue[];
 }
 
 export interface PlayerDecision {
@@ -112,6 +120,8 @@ export interface UserStats {
   averageScore: number;
   skillRatings: Record<SkillCategory, { points: number; maxPoints: number; level: number }>;
   completedScenarios: string[];
+  dailyStreak: number;
+  lastActiveDate?: string;
 }
 
 export interface StoredUserData {

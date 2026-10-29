@@ -119,6 +119,49 @@ class SoundEffects {
       // Ignore audio error
     }
   }
+
+  // Calm heartbeat ticker for last 10 seconds
+  public playTick() {
+    const ctx = this.getContext();
+    if (!ctx) return;
+    try {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(520, ctx.currentTime);
+      gain.gain.setValueAtTime(0.03, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.04);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.04);
+    } catch {
+      // Ignore
+    }
+  }
+
+  // Voice narration using native Web Speech Synthesis
+  public speakNarrative(text: string, onEnd?: () => void) {
+    if (!this.enabled || typeof window === 'undefined' || !('speechSynthesis' in window)) return;
+    try {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 1.05;
+      utterance.pitch = 1.0;
+      if (onEnd) {
+        utterance.onend = onEnd;
+      }
+      window.speechSynthesis.speak(utterance);
+    } catch {
+      // Speech synthesis unsupported or blocked
+    }
+  }
+
+  public stopSpeaking() {
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+    }
+  }
 }
 
 export const soundManager = new SoundEffects();

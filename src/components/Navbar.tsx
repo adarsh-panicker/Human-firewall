@@ -1,5 +1,5 @@
 import React from 'react';
-import { Shield, Zap, Volume2, VolumeX, Home, HelpCircle } from 'lucide-react';
+import { Shield, Zap, Volume2, VolumeX, Home, HelpCircle, Terminal } from 'lucide-react';
 import { UserProfile } from '../types/game';
 
 interface NavbarProps {
@@ -7,6 +7,7 @@ interface NavbarProps {
   onNavigate: (view: 'welcome' | 'dashboard' | 'practice') => void;
   onLaunchDemo: () => void;
   onOpenHowItWorks: () => void;
+  onOpenThreatSandbox: () => void;
   soundEnabled: boolean;
   onToggleSound: () => void;
   userProfile: UserProfile;
@@ -25,6 +26,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onNavigate,
   onLaunchDemo,
   onOpenHowItWorks,
+  onOpenThreatSandbox,
   soundEnabled,
   onToggleSound,
   userProfile,
@@ -70,6 +72,15 @@ export const Navbar: React.FC<NavbarProps> = ({
               <span>Demo Scenario</span>
             </button>
           )}
+
+          <button
+            onClick={onOpenThreatSandbox}
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg text-slate-300 hover:text-white hover:bg-navy-800/80 border border-transparent hover:border-navy-700 transition-colors"
+            title="Inspect URLs and domain anatomy in the Threat Sandbox"
+          >
+            <Terminal className="w-3.5 h-3.5 text-cyan-400" />
+            <span className="hidden md:inline">Sandbox</span>
+          </button>
 
           <button
             onClick={onOpenHowItWorks}

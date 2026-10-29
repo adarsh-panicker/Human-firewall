@@ -6,7 +6,13 @@ import {
   LogOut, 
   Shield, 
   Lightbulb,
-  Sparkles
+  Sparkles,
+  Volume2,
+  VolumeX,
+  Search,
+  AlertTriangle,
+  Eye,
+  EyeOff
 } from 'lucide-react';
 import { DecisionOption, Scenario, UserProfile } from '../types/game';
 import { SKILL_LABELS, SKILL_COLORS } from '../engine/scoringEngine';
@@ -52,6 +58,8 @@ export const InteractiveScenarioScreen: React.FC<InteractiveScenarioScreenProps>
   const [hasAnswered, setHasAnswered] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState<DecisionOption | null>(null);
   const [showExitConfirm, setShowExitConfirm] = useState<boolean>(false);
+  const [showClues, setShowClues] = useState<boolean>(false);
+  const [isNarrating, setIsNarrating] = useState<boolean>(false);
 
   const startTimeRef = useRef<number>(0);
   const timerRef = useRef<any>(null);
@@ -63,6 +71,9 @@ export const InteractiveScenarioScreen: React.FC<InteractiveScenarioScreenProps>
     setHasAnswered(false);
     setSelectedOption(null);
     setShowExitConfirm(false);
+    setShowClues(false);
+    setIsNarrating(false);
+    soundManager.stopSpeaking();
     startTimeRef.current = Date.now();
   }, [scenario.id]);
 
@@ -76,8 +87,10 @@ export const InteractiveScenarioScreen: React.FC<InteractiveScenarioScreenProps>
     timerRef.current = setInterval(() => {
       setSecondsRemaining(prev => {
         if (prev <= 1) {
-          // Timer reached 0; remains at 0 without forcing or penalizing reading
           return 0;
+        }
+        if (prev <= 10 && prev > 1) {
+          soundManager.playTick();
         }
         return prev - 1;
       });
@@ -87,6 +100,17 @@ export const InteractiveScenarioScreen: React.FC<InteractiveScenarioScreenProps>
       if (timerRef.current) clearInterval(timerRef.current);
     };
   }, [hasAnswered, isPaused]);
+
+  // Voice narration toggle
+  const handleToggleNarration = () => {
+    if (isNarrating) {
+      soundManager.stopSpeaking();
+      setIsNarrating(false);
+    } else {
+      setIsNarrating(true);
+      soundManager.speakNarrative(scenario.narrative, () => setIsNarrating(false));
+    }
+  };
 
   // Handle option selection
   const handleSelectOption = useCallback((option: DecisionOption) => {
@@ -210,9 +234,26 @@ export const InteractiveScenarioScreen: React.FC<InteractiveScenarioScreenProps>
 
       {/* Scenario Narrative Box */}
       <div className="bg-navy-900/80 border border-navy-700/80 rounded-2xl p-6 text-left shadow-lg">
-        <h2 className="text-xl sm:text-2xl font-bold text-white mb-2">
-          {scenario.title}
-        </h2>
+        <div className="flex items-start justify-between gap-4 mb-2">
+          <h2 className="text-xl sm:text-2xl font-bold text-white">
+            {scenario.title}
+          </h2>
+
+          {/* Voice Dispatch Audio button */}
+          <button
+            onClick={handleToggleNarration}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-semibold transition-all shrink-0 ${
+              isNarrating 
+                ? 'bg-cyan-500 text-navy-950 border-cyan-400 animate-pulse'
+                : 'bg-navy-950 text-slate-300 hover:text-white border-navy-700 hover:border-cyan-500/50'
+            }`}
+            title="Read scenario aloud (Web Speech API)"
+          >
+            {isNarrating ? <VolumeX className="w-3.5 h-3.5" /> : <Volume2 className="w-3.5 h-3.5 text-cyan-400" />}
+            <span className="hidden sm:inline">{isNarrating ? 'Stop Audio' : 'Dispatch Audio'}</span>
+          </button>
+        </div>
+
         <p className="text-sm sm:text-base text-slate-300 leading-relaxed mb-4">
           {scenario.narrative}
         </p>
@@ -227,6 +268,59 @@ export const InteractiveScenarioScreen: React.FC<InteractiveScenarioScreenProps>
           </div>
         )}
       </div>
+
+      {/* Forensic Clues Inspector Toolbar */}
+      {scenario.forensicClues && scenario.forensicClues.length > 0 && (
+        <div className="flex items-center justify-between bg-navy-900/60 border border-navy-800 rounded-xl px-4 py-2.5 text-xs text-left">
+          <div className="flex items-center gap-2">
+            <Search className="w-4 h-4 text-amber-400" />
+            <span className="text-slate-300 font-medium">Forensic Investigation:</span>
+            <span className="text-slate-400 hidden sm:inline">Inspect subtle red flags before making your choice</span>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setShowClues(!showClues)}
+            className={`flex items-center gap-1.5 px-3 py-1 rounded-lg border text-xs font-semibold transition-colors ${
+              showClues
+                ? 'bg-amber-500/20 text-amber-300 border-amber-500/50'
+                : 'bg-navy-950 text-slate-300 hover:text-amber-300 border-navy-700 hover:border-amber-500/40'
+            }`}
+          >
+            {showClues ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5 text-amber-400" />}
+            <span>{showClues ? 'Hide Red Flags' : `Inspect Clues (${scenario.forensicClues.length})`}</span>
+          </button>
+        </div>
+      )}
+
+      {/* Expanded Forensic Clues Panel */}
+      {showClues && scenario.forensicClues && (
+        <div className="bg-amber-950/25 border border-amber-500/40 rounded-2xl p-4 sm:p-5 text-left animate-in fade-in duration-200">
+          <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase text-amber-300 mb-3">
+            <AlertTriangle className="w-4 h-4 text-amber-400" />
+            <span>Identified Red Flags & Forensic Clues</span>
+          </div>
+          <div className="space-y-2.5">
+            {scenario.forensicClues.map((clue) => (
+              <div key={clue.id} className="p-3 bg-navy-950/80 rounded-xl border border-navy-800 text-xs">
+                <div className="flex items-center justify-between mb-1">
+                  <span className="font-bold text-amber-300 font-mono">{clue.element}</span>
+                  <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase ${
+                    clue.redFlagLevel === 'critical' 
+                      ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40'
+                      : 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
+                  }`}>
+                    {clue.redFlagLevel} Red Flag
+                  </span>
+                </div>
+                <p className="text-slate-300 leading-relaxed">
+                  {clue.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Simulated Artifact / Message Screen */}
       <SimulatedMessage scenario={scenario} />

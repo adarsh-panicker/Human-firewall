@@ -18,7 +18,8 @@ const DEFAULT_STATS: UserStats = {
     incident: { points: 0, maxPoints: 0, level: 1 },
     browsing: { points: 0, maxPoints: 0, level: 1 },
   },
-  completedScenarios: []
+  completedScenarios: [],
+  dailyStreak: 0
 };
 
 const DEFAULT_DATA: StoredUserData = {
@@ -71,11 +72,28 @@ export function saveUserData(data: StoredUserData): void {
 }
 
 export function updateStatsWithSession(stats: UserStats, session: GameSession): UserStats {
+  const todayStr = new Date().toISOString().slice(0, 10);
+  let streak = stats.dailyStreak || 0;
+  if (!stats.lastActiveDate) {
+    streak = 1;
+  } else if (stats.lastActiveDate !== todayStr) {
+    const lastDate = new Date(stats.lastActiveDate);
+    const today = new Date(todayStr);
+    const diffDays = Math.round((today.getTime() - lastDate.getTime()) / (1000 * 3600 * 24));
+    if (diffDays === 1) {
+      streak += 1;
+    } else if (diffDays > 1) {
+      streak = 1;
+    }
+  }
+
   const newStats: UserStats = {
     ...stats,
     totalGamesPlayed: stats.totalGamesPlayed + 1,
     totalDecisionsMade: stats.totalDecisionsMade + session.decisions.length,
     bestScore: Math.max(stats.bestScore, session.normalizedScore),
+    dailyStreak: streak,
+    lastActiveDate: todayStr,
     completedScenarios: Array.from(new Set([
       ...stats.completedScenarios,
       ...session.decisions.map(d => d.scenarioId)

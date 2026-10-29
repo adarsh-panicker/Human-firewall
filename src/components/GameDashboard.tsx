@@ -10,11 +10,15 @@ import {
   CheckCircle2, 
   AlertTriangle, 
   ChevronRight,
-  Lock
+  Lock,
+  Terminal,
+  Flame
 } from 'lucide-react';
 import { StoredUserData, GameMode, GameSession, SkillCategory } from '../types/game';
 import { SKILL_LABELS, SKILL_COLORS } from '../engine/scoringEngine';
 import { soundManager } from '../utils/audio';
+import { CyberRadarChart } from './CyberRadarChart';
+import { ThreatSandboxModal } from './ThreatSandboxModal';
 
 interface GameDashboardProps {
   userData: StoredUserData;
@@ -40,6 +44,7 @@ export const GameDashboard: React.FC<GameDashboardProps> = ({
   onOpenSetup
 }) => {
   const [showResetConfirm, setShowResetConfirm] = useState(false);
+  const [showSandbox, setShowSandbox] = useState(false);
   const { stats, achievements, history, activeSession, profile, displayName } = userData;
 
   const hasActiveSession = activeSession && !activeSession.completed;
@@ -56,6 +61,12 @@ export const GameDashboard: React.FC<GameDashboardProps> = ({
               <span className="text-xs font-mono uppercase tracking-wider text-cyan-300">
                 Security Profile Active • {profile.toUpperCase()}
               </span>
+              {stats.dailyStreak > 0 && (
+                <span className="inline-flex items-center gap-1 text-[11px] font-mono font-bold text-amber-300 bg-amber-500/10 border border-amber-500/30 px-2 py-0.5 rounded-full">
+                  <Flame className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
+                  <span>{stats.dailyStreak} Day Streak</span>
+                </span>
+              )}
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
               Welcome back, {displayName || 'Cyber Operator'}
@@ -65,16 +76,27 @@ export const GameDashboard: React.FC<GameDashboardProps> = ({
             </p>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2.5">
+            <button
+              onClick={() => {
+                soundManager.playClick();
+                setShowSandbox(true);
+              }}
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-cyan-500/15 hover:bg-cyan-500/25 border border-cyan-500/40 text-cyan-300 text-xs font-semibold transition-colors"
+              title="Launch the Domain & URL Threat Sandbox Analyzer"
+            >
+              <Terminal className="w-3.5 h-3.5 text-cyan-400" />
+              <span>Threat Sandbox</span>
+            </button>
             <button
               onClick={onOpenSetup}
-              className="px-4 py-2 rounded-xl bg-navy-800 hover:bg-navy-700 border border-navy-700 text-xs font-semibold text-slate-300 hover:text-white transition-colors"
+              className="px-3.5 py-2 rounded-xl bg-navy-800 hover:bg-navy-700 border border-navy-700 text-xs font-semibold text-slate-300 hover:text-white transition-colors"
             >
-              Change Role Profile
+              Role Profile
             </button>
             <button
               onClick={onLaunchDemo}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/40 text-amber-300 text-xs font-semibold transition-colors"
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/40 text-amber-300 text-xs font-semibold transition-colors"
             >
               <Zap className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
               <span>Demo Scenario</span>
@@ -268,41 +290,49 @@ export const GameDashboard: React.FC<GameDashboardProps> = ({
           <span className="text-xs font-mono text-cyan-400">Adaptive Radar</span>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {(Object.keys(stats.skillRatings) as SkillCategory[]).map((cat) => {
-            const item = stats.skillRatings[cat];
-            const colors = SKILL_COLORS[cat];
-            const pct = item.maxPoints > 0 ? Math.round((item.points / item.maxPoints) * 100) : 0;
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+          {/* Radar Chart */}
+          <div className="lg:col-span-5 flex justify-center py-2 bg-navy-950/40 rounded-2xl border border-navy-800/80">
+            <CyberRadarChart skills={stats.skillRatings} size={250} />
+          </div>
 
-            return (
-              <div key={cat} className="bg-navy-950/80 p-4 rounded-xl border border-navy-800 flex flex-col justify-between">
-                <div className="flex items-center justify-between mb-2">
-                  <span className={`text-xs font-bold ${colors.text}`}>
-                    {SKILL_LABELS[cat]}
-                  </span>
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-navy-900 text-slate-300 border border-navy-800">
-                    Lvl {item.level} / 5
-                  </span>
-                </div>
+          {/* Skill Cards */}
+          <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            {(Object.keys(stats.skillRatings) as SkillCategory[]).map((cat) => {
+              const item = stats.skillRatings[cat];
+              const colors = SKILL_COLORS[cat];
+              const pct = item.maxPoints > 0 ? Math.round((item.points / item.maxPoints) * 100) : 0;
 
-                <div className="space-y-1.5 mt-2">
-                  <div className="flex items-center justify-between text-[11px] font-mono text-slate-400">
-                    <span>Mastery</span>
-                    <span className="font-bold text-white">{pct}%</span>
+              return (
+                <div key={cat} className="bg-navy-950/80 p-3.5 rounded-xl border border-navy-800 flex flex-col justify-between">
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className={`text-xs font-bold ${colors.text}`}>
+                      {SKILL_LABELS[cat]}
+                    </span>
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-navy-900 text-slate-300 border border-navy-800">
+                      Lvl {item.level} / 5
+                    </span>
                   </div>
-                  <div className="w-full h-1.5 bg-navy-900 rounded-full overflow-hidden border border-navy-800">
-                    <div 
-                      className="h-full bg-cyan-400 rounded-full transition-all duration-500"
-                      style={{ width: `${Math.max(5, pct)}%` }}
-                    />
+
+                  <div className="space-y-1.5 mt-1">
+                    <div className="flex items-center justify-between text-[11px] font-mono text-slate-400">
+                      <span>Mastery</span>
+                      <span className="font-bold text-white">{pct}%</span>
+                    </div>
+                    <div className="w-full h-1.5 bg-navy-900 rounded-full overflow-hidden border border-navy-800">
+                      <div 
+                        className="h-full bg-cyan-400 rounded-full transition-all duration-500"
+                        style={{ width: `${Math.max(5, pct)}%` }}
+                      />
+                    </div>
+                    <span className="text-[10px] text-slate-400 font-mono block text-right">
+                      {item.points} / {item.maxPoints} pts
+                    </span>
                   </div>
-                  <span className="text-[10px] text-slate-400 font-mono block text-right">
-                    {item.points} / {item.maxPoints} pts
-                  </span>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
       </div>
 
@@ -464,6 +494,12 @@ export const GameDashboard: React.FC<GameDashboardProps> = ({
           </div>
         </div>
       )}
+
+      {/* Threat Sandbox Modal */}
+      <ThreatSandboxModal
+        isOpen={showSandbox}
+        onClose={() => setShowSandbox(false)}
+      />
     </div>
   );
 };

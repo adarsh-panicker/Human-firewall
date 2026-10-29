@@ -9,13 +9,16 @@ import {
   ShieldCheck, 
   ShieldAlert, 
   ChevronDown, 
-  ChevronUp
+  ChevronUp,
+  Award
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { GameSession, SkillCategory } from '../types/game';
 import { generatePersonalizedReport } from '../engine/reportGenerator';
 import { calculateSessionScore, SKILL_LABELS } from '../engine/scoringEngine';
 import { soundManager } from '../utils/audio';
+import { CyberRadarChart } from './CyberRadarChart';
+import { ClearanceCertificateModal } from './ClearanceCertificateModal';
 
 interface ResultsReportProps {
   session: GameSession;
@@ -35,6 +38,7 @@ export const ResultsReport: React.FC<ResultsReportProps> = ({
   onReturnDashboard
 }) => {
   const [showFullAudit, setShowFullAudit] = useState<boolean>(false);
+  const [showCertModal, setShowCertModal] = useState<boolean>(false);
 
   const scoreReport = calculateSessionScore(session.decisions);
   const reportData = generatePersonalizedReport(session, scoreReport, history);
@@ -88,6 +92,14 @@ export const ResultsReport: React.FC<ResultsReportProps> = ({
 
           {/* Action buttons (hidden when printing) */}
           <div className="flex items-center gap-2 no-print">
+            <button
+              onClick={() => setShowCertModal(true)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyan-500/15 hover:bg-cyan-500/25 border border-cyan-500/40 text-cyan-300 text-xs font-semibold transition-colors"
+              title="View & print your digital security clearance badge"
+            >
+              <Award className="w-3.5 h-3.5 text-cyan-400" />
+              <span>Clearance Badge</span>
+            </button>
             <button
               onClick={handlePrint}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-navy-800 hover:bg-navy-700 border border-navy-700 text-slate-300 hover:text-white text-xs font-semibold transition-colors"
@@ -185,33 +197,45 @@ export const ResultsReport: React.FC<ResultsReportProps> = ({
 
         {/* Category Skill Profile Visual Breakdown */}
         <div className="py-6 border-b border-navy-800 print:border-slate-300">
-          <h3 className="text-xs font-mono uppercase tracking-wider text-slate-400 mb-4">
-            Security Skill Profile Breakdown
-          </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {(Object.keys(scoreReport.categoryScores) as SkillCategory[]).map((cat) => {
-              const entry = scoreReport.categoryScores[cat];
-              return (
-                <div key={cat} className="p-3.5 rounded-xl bg-navy-950/70 border border-navy-800 print-surface">
-                  <div className="flex items-center justify-between text-xs mb-1.5">
-                    <span className="font-semibold text-slate-200 print-text-dark">{SKILL_LABELS[cat]}</span>
-                    <span className="font-mono font-bold text-cyan-300">{entry.percentage}%</span>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-xs font-mono uppercase tracking-wider text-slate-400">
+              Security Skill Profile & Defensive Radar
+            </h3>
+            <span className="text-[11px] text-cyan-400 font-mono hidden sm:inline">6-Axis Competency Map</span>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+            {/* Radar Chart */}
+            <div className="lg:col-span-5 flex justify-center py-2 bg-navy-950/40 rounded-2xl border border-navy-800/80">
+              <CyberRadarChart skills={scoreReport.categoryScores} size={250} />
+            </div>
+
+            {/* Bars List */}
+            <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {(Object.keys(scoreReport.categoryScores) as SkillCategory[]).map((cat) => {
+                const entry = scoreReport.categoryScores[cat];
+                return (
+                  <div key={cat} className="p-3 rounded-xl bg-navy-950/70 border border-navy-800 print-surface">
+                    <div className="flex items-center justify-between text-xs mb-1">
+                      <span className="font-semibold text-slate-200 print-text-dark">{SKILL_LABELS[cat]}</span>
+                      <span className="font-mono font-bold text-cyan-300">{entry.percentage}%</span>
+                    </div>
+                    <div className="w-full h-1.5 bg-navy-900 rounded-full overflow-hidden border border-navy-800">
+                      <div 
+                        className={`h-full rounded-full transition-all duration-500 ${
+                          entry.percentage >= 80 ? 'bg-teal-400' : entry.percentage >= 50 ? 'bg-cyan-400' : 'bg-amber-400'
+                        }`}
+                        style={{ width: `${entry.percentage}%` }}
+                      />
+                    </div>
+                    <div className="flex justify-between text-[10px] text-slate-400 mt-1 font-mono">
+                      <span>{entry.decisionCount} rounds</span>
+                      <span>{entry.earned} / {entry.maxPossible} pts</span>
+                    </div>
                   </div>
-                  <div className="w-full h-2 bg-navy-900 rounded-full overflow-hidden border border-navy-800">
-                    <div 
-                      className={`h-full rounded-full transition-all duration-500 ${
-                        entry.percentage >= 80 ? 'bg-teal-400' : entry.percentage >= 50 ? 'bg-cyan-400' : 'bg-amber-400'
-                      }`}
-                      style={{ width: `${entry.percentage}%` }}
-                    />
-                  </div>
-                  <div className="flex justify-between text-[10px] text-slate-400 mt-1 font-mono">
-                    <span>{entry.decisionCount} scenarios tested</span>
-                    <span>{entry.earned} / {entry.maxPossible} pts</span>
-                  </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
         </div>
 
@@ -315,6 +339,13 @@ export const ResultsReport: React.FC<ResultsReportProps> = ({
           </button>
         </div>
       </div>
+
+      {/* Clearance Certificate Modal */}
+      <ClearanceCertificateModal
+        isOpen={showCertModal}
+        onClose={() => setShowCertModal(false)}
+        session={session}
+      />
     </div>
   );
 };
