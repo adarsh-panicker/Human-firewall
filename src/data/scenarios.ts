@@ -859,9 +859,9 @@ export const SCENARIOS: Scenario[] = [
       {
         id: 'ven-opt-ignore-advisory',
         text: 'Tell them it is their problem to figure out and discard the malicious headers.',
-        safety: 'partial',
-        score: 5,
-        skillImpact: { skill: 'incident', points: 5 },
+        safety: 'risky',
+        score: 0,
+        skillImpact: { skill: 'incident', points: 0 },
         consequence: 'Other suppliers fall victim to the exact same lookalike domain the next morning.',
         securityPrinciple: 'Collaborative Defense',
         saferExplanation: 'Supplying IOCs takes minutes and prevents shared industry risk.'
