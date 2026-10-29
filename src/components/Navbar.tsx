@@ -1,5 +1,5 @@
 import React from 'react';
-import { Shield, Zap, Volume2, VolumeX, Home, HelpCircle, Terminal } from 'lucide-react';
+import { Shield, Zap, Volume2, VolumeX, Home, HelpCircle, Globe } from 'lucide-react';
 import { UserProfile } from '../types/game';
 
 interface NavbarProps {
@@ -86,11 +86,11 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           <button
             onClick={onOpenThreatSandbox}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg text-slate-300 hover:text-white hover:bg-navy-800/80 border border-transparent hover:border-navy-700 transition-colors"
-            title="Inspect URLs and domain anatomy in the Threat Sandbox"
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-navy-800 hover:bg-navy-700 text-slate-200 hover:text-white border border-navy-700 transition-colors shadow-sm"
+            title="Scan any website link to check if it is legitimate, fake, or spam"
           >
-            <Terminal className="w-3.5 h-3.5 text-cyan-400" />
-            <span className="hidden md:inline">Sandbox</span>
+            <Globe className="w-3.5 h-3.5 text-cyan-400" />
+            <span>Link Scanner</span>
           </button>
 
           <button

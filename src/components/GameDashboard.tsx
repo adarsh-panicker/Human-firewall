@@ -11,8 +11,8 @@ import {
   AlertTriangle, 
   ChevronRight,
   Lock,
-  Terminal,
-  Flame
+  Flame,
+  Globe
 } from 'lucide-react';
 import { StoredUserData, GameMode, GameSession, SkillCategory } from '../types/game';
 import { SKILL_LABELS, SKILL_COLORS } from '../engine/scoringEngine';
@@ -100,10 +100,10 @@ export const GameDashboard: React.FC<GameDashboardProps> = ({
                 setShowSandbox(true);
               }}
               className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-navy-800 hover:bg-navy-700 border border-navy-700 text-slate-300 hover:text-white text-xs font-semibold transition-colors"
-              title="Launch the Domain & URL Threat Sandbox Analyzer"
+              title="Scan any website link or URL to check if it is legitimate, fake, or phishing"
             >
-              <Terminal className="w-3.5 h-3.5 text-cyan-400" />
-              <span>Threat Sandbox</span>
+              <Globe className="w-3.5 h-3.5 text-cyan-400" />
+              <span>Link Scanner</span>
             </button>
             <button
               onClick={onOpenSetup}
